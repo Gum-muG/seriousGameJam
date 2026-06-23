@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assemblies;
 
@@ -5,7 +6,6 @@ public class player : MonoBehaviour
 {
 
     [SerializeField] private float moveSpeed = 7f;
-    [SerializeField] private float rotateSpeed = 10f;
     [SerializeField] private float tiltSpeed = 5f;
     private bool playerMoving = false;
     Vector3 tiltVector;
@@ -46,15 +46,16 @@ public class player : MonoBehaviour
         }
         if (playerMoving)
         {
-            targetTilt = new Vector3(45f, transform.localEulerAngles.y, transform.localEulerAngles.z);
+            targetTilt = new Vector3(tiltVector.x + inputVector.y * 20f, tiltVector.y, tiltVector.z + -inputVector.x * 20f);
             currentTilt = Vector3.Slerp(currentTilt, targetTilt, Time.deltaTime * tiltSpeed);
+            Debug.Log(tiltVector);
             transform.localEulerAngles = currentTilt;
         }
         if (!playerMoving)
         {
-            targetTilt = tiltVector;
-            targetTilt = Vector3.Slerp(currentTilt, tiltVector, Time.deltaTime * tiltSpeed);
-            transform.localEulerAngles = targetTilt;
+            targetTilt = new Vector3(tiltVector.x, tiltVector.y, tiltVector.z);
+            currentTilt = Vector3.Slerp(currentTilt, targetTilt, Time.deltaTime * tiltSpeed);
+            transform.localEulerAngles = currentTilt;
         }
 
         inputVector = inputVector.normalized;
@@ -62,7 +63,6 @@ public class player : MonoBehaviour
         Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
 
         transform.position += (moveDir * Time.deltaTime * moveSpeed);
-        transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
 
         
     }
