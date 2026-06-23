@@ -53,6 +53,5 @@ public class player : MonoBehaviour
 
         transform.position += (moveDir * Time.deltaTime * moveSpeed);
         transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
-        transform.localEulerAngles = new Vector3(45f, transform.localEulerAngles.y, transform.localEulerAngles.z);
     }
 }
