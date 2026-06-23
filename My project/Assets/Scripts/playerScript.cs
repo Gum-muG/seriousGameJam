@@ -144,7 +144,7 @@ public class player : MonoBehaviour
             grounded = true;
         }
 
-        beyblade_mesh.localEulerAngles = new Vector3(currentTilt.x -90, spinY, currentTilt.z);
+        beyblade_mesh.localEulerAngles = new Vector3(beyblade_mesh.localEulerAngles.x, spinY, beyblade_mesh.localEulerAngles.z);
 
     }
     private void Damage(int damage)
