@@ -57,5 +57,10 @@ public class player : MonoBehaviour
 
         transform.position += (moveDir * Time.deltaTime * moveSpeed);
         transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
+        if (Input.GetKey(KeyCode.W))
+        {
+            
+            Debug.Log("Pressing W");
+        }
     }
 }

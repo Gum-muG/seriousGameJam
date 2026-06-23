@@ -241,7 +241,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 388721808}
-  - component: {fileID: 388721807}
+  - component: {fileID: 388721809}
   m_Layer: 0
   m_Name: player
   m_TagString: Untagged
@@ -249,21 +249,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &388721807
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 388721806}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb91381816dc9f34c90a9598a3d7f357, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::playerScript
-  moveSpeed: 7
-  rotateSpeed: 10
-  tiltSpeed: 5
 --- !u!4 &388721808
 Transform:
   m_ObjectHideFlags: 0
@@ -280,6 +265,21 @@ Transform:
   - {fileID: 1347649704}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &388721809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 388721806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb91381816dc9f34c90a9598a3d7f357, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::player
+  moveSpeed: 7
+  rotateSpeed: 10
+  tiltSpeed: 5
 --- !u!1 &938476107
 GameObject:
   m_ObjectHideFlags: 0
@@ -443,7 +443,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 343f32771fd4bdc49aa2a214d3606e7d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 343f32771fd4bdc49aa2a214d3606e7d, type: 3}
       propertyPath: m_LocalPosition.z
