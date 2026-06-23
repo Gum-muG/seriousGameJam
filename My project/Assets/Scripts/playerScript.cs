@@ -47,14 +47,14 @@ public class player : MonoBehaviour
         if (playerMoving)
         {
             targetTilt = new Vector3(tiltVector.x + inputVector.y * 20f, tiltVector.y, tiltVector.z + -inputVector.x * 20f);
-            currentTilt = Vector3.Slerp(currentTilt, targetTilt, Time.deltaTime * tiltSpeed);
+            currentTilt = Quaternion.Slerp(Quaternion.Euler(currentTilt), Quaternion.Euler(targetTilt), Time.deltaTime * tiltSpeed).eulerAngles;
             Debug.Log(tiltVector);
             transform.localEulerAngles = currentTilt;
         }
         if (!playerMoving)
         {
             targetTilt = new Vector3(tiltVector.x, tiltVector.y, tiltVector.z);
-            currentTilt = Vector3.Slerp(currentTilt, targetTilt, Time.deltaTime * tiltSpeed);
+            currentTilt = Quaternion.Slerp(Quaternion.Euler(currentTilt), Quaternion.Euler(targetTilt), Time.deltaTime * tiltSpeed).eulerAngles;
             transform.localEulerAngles = currentTilt;
         }
 
