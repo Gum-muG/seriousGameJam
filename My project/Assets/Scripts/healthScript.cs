@@ -1,16 +1,58 @@
 using UnityEngine;
 
-public class healthScript : MonoBehaviour
+public class HealthComponent
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    int health;
+    int maxHealth;
 
-    // Update is called once per frame
-    void Update()
+    public int Health
     {
-        
+        get
+        {
+            return health;
+        }
+        set
+        {
+            health = value;
+        }
+    }
+    public int MaxHealth
+    {
+        get
+        {
+            return maxHealth;
+        }
+        set
+        {
+            maxHealth = value;
+        }
+    }
+    public HealthComponent(int health, int maxHealth)
+    {
+        this.health = health;
+        this.maxHealth = maxHealth;
+    }
+    public void Damage(int damage)
+    {
+        if (health > 0)
+        {
+            health -= damage;
+        }
+        if (health < 0)
+        {
+            health = 0;
+        }
+    }
+    public void Heal(int heal)
+    {
+        if (health < maxHealth)
+        {
+            health += heal;
+        }
+        if (health > maxHealth)
+        {
+            health = maxHealth;
+        }
     }
 }
+

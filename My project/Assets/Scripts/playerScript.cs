@@ -63,7 +63,9 @@ public class player : MonoBehaviour
         Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
 
         transform.position += (moveDir * Time.deltaTime * moveSpeed);
-
-        
+    }
+    private void Damage(int damage)
+    {
+        GameManager.instance.playerHealth.Damage(damage);
     }
 }
