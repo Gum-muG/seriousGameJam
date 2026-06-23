@@ -9,6 +9,7 @@ public class player : MonoBehaviour
     [SerializeField] private float tiltSpeed = 5f;
     private bool playerMoving = false;
     Vector3 tiltVector;
+    Vector3 targetTilt;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -21,6 +22,7 @@ public class player : MonoBehaviour
     {
         playerMoving = false;
         Vector2 inputVector = new Vector2(0, 0);
+        Vector3 currentTilt = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, transform.localEulerAngles.z);
 
         if (Input.GetKey(KeyCode.W))
         {
@@ -44,11 +46,15 @@ public class player : MonoBehaviour
         }
         if (playerMoving)
         {
-            transform.localEulerAngles = new Vector3(45f, transform.localEulerAngles.y, transform.localEulerAngles.z);
+            targetTilt = new Vector3(45f, transform.localEulerAngles.y, transform.localEulerAngles.z);
+            currentTilt = Vector3.Slerp(currentTilt, targetTilt, Time.deltaTime * tiltSpeed);
+            transform.localEulerAngles = currentTilt;
         }
         if (!playerMoving)
         {
-            transform.localEulerAngles = tiltVector;
+            targetTilt = tiltVector;
+            targetTilt = Vector3.Slerp(currentTilt, tiltVector, Time.deltaTime * tiltSpeed);
+            transform.localEulerAngles = targetTilt;
         }
 
         inputVector = inputVector.normalized;
@@ -57,10 +63,7 @@ public class player : MonoBehaviour
 
         transform.position += (moveDir * Time.deltaTime * moveSpeed);
         transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
-        if (Input.GetKey(KeyCode.W))
-        {
-            
-            Debug.Log("Pressing W");
-        }
+
+        
     }
 }
