@@ -277,9 +277,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb91381816dc9f34c90a9598a3d7f357, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::player
-  moveSpeed: 7
-  rotateSpeed: 10
+  moveSpeed: 10
   tiltSpeed: 5
+  spinSpeed: 360
+  beyblade_mesh: {fileID: 1347649704}
+  gravity: 10
+  jumpForce: 3
+  dashSpeed: 30
+  dashTime: 0.1
+--- !u!1 &833194264 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 343f32771fd4bdc49aa2a214d3606e7d, type: 3}
+  m_PrefabInstance: {fileID: 1347649703}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &938476107
 GameObject:
   m_ObjectHideFlags: 0
@@ -488,13 +498,38 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 343f32771fd4bdc49aa2a214d3606e7d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1347649707}
   m_SourcePrefab: {fileID: 100100000, guid: 343f32771fd4bdc49aa2a214d3606e7d, type: 3}
 --- !u!4 &1347649704 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 343f32771fd4bdc49aa2a214d3606e7d, type: 3}
   m_PrefabInstance: {fileID: 1347649703}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &1347649707
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 833194264}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 744a39e2331b1d04ca219ec98821ad86, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1721593374
 GameObject:
   m_ObjectHideFlags: 0
