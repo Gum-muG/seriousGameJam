@@ -255,7 +255,7 @@ public class player : MonoBehaviour
             cameraRotation = Mathf.Clamp(cameraRotation, -80f, 80f);
 
             ray = new Ray(playerCameraEmpty.position, -playerCamera.forward);
-            if (Physics.SphereCast(ray, 0.2f, out RaycastHit hit, math.abs(cameraDistance), (1<<playerLayer)))
+            if (Physics.SphereCast(ray, 0.2f, out RaycastHit hit, math.abs(cameraDistance), (1<<groundLayer)|(1<<wallLayer)))
             {
                 playerCamera.localPosition = new Vector3(0,0,-hit.distance);
             }
@@ -264,7 +264,7 @@ public class player : MonoBehaviour
                 playerCamera.localPosition = new Vector3(0, 0, cameraDistance);
             }
 
-            playerCamera.localEulerAngles = new Vector3(cameraRotation, 0f, 0f);
+            playerCameraEmpty.localEulerAngles = new Vector3(cameraRotation, 0f, 0f);
 
             currentPlayerVelocity = moveDir * moveSpeed;
         }
