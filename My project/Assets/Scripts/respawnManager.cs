@@ -15,7 +15,13 @@ public class respawnManager : MonoBehaviour
 
     public static respawnManager instance {get; private set;}
 
-    void Awake()
+  void Start()
+  {
+    respawnButton.onClick.AddListener(respawnPlayer);
+    exitGameButton.onClick.AddListener(exitGame);
+  }
+
+  void Awake()
     {
         if (instance != null && instance != this)
         {
@@ -34,15 +40,16 @@ public class respawnManager : MonoBehaviour
         respawnScreenUI.SetActive(true);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-
-        respawnButton.onClick.AddListener(respawnPlayer);
-        exitGameButton.onClick.AddListener(exitGame);
     }
 
     private void respawnPlayer()
     {
         Time.timeScale = 1f;
+        CharacterController controller = player.GetComponent<CharacterController>();
+
+        controller.enabled = false;
         player.transform.position = startingPos;
+        controller.enabled = true;
         GameManager.instance.playerHealth.Health = 20;
         HUD.instance.SetHealth(GameManager.instance.playerHealth.Health);
         Cursor.visible = false;
