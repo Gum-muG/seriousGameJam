@@ -39,7 +39,6 @@ public class player : MonoBehaviour
 
 //BOOLEANS//
     private bool playerMoving = false;
-    private bool grounded = true;
     private bool dashing = false;
 
 
@@ -163,7 +162,6 @@ public class player : MonoBehaviour
 //jump
         if (Input.GetKeyDown(KeyCode.Space) && characterController.isGrounded){
             verticalVelocity = jumpForce;
-            grounded = false;
         }
 
 //dash and dive
@@ -225,7 +223,6 @@ public class player : MonoBehaviour
 
         if (characterController.isGrounded && verticalVelocity < 0f){
             verticalVelocity = -1f;
-            grounded = true;
         }
 
         verticalVelocity -= gravity * Time.deltaTime;
@@ -305,6 +302,9 @@ public class player : MonoBehaviour
                 bounceDirection.Normalize();
 
                 bounceVelocity = bounceDirection * collisionStrength;
+
+        //Taking damage
+                Damage(2);
 
                 dashing = false;
             }
