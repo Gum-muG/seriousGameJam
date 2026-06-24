@@ -17,6 +17,7 @@ public class player : MonoBehaviour
     [SerializeField] private Transform beyblade_mesh;
     [SerializeField] private Transform spin_empty;
     [SerializeField] private CharacterController characterController;
+    [SerializeField] private Transform playerCamera;
 
     [SerializeField] private float gravity = 10f;
     [SerializeField] private float dashSpeed = 30f;
@@ -43,6 +44,7 @@ public class player : MonoBehaviour
     private float dashTimer = 0f;
     private float lateralRotationSpeed;
     private float verticalRotationSpeed;
+    private float cameraRotation = 0f;
     
 
 //START
@@ -233,6 +235,11 @@ public class player : MonoBehaviour
 
         else {
             transform.Rotate(0f, lateralRotationSpeed, 0f);
+
+            cameraRotation -= verticalRotationSpeed;
+            cameraRotation = Mathf.Clamp(cameraRotation, -80f, 80f);
+
+playerCamera.localEulerAngles = new Vector3(cameraRotation, 0f, 0f);
             characterController.Move(moveDir * moveSpeed * Time.deltaTime);      
         }
 
