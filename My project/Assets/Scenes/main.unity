@@ -244,6 +244,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4655759042630319673, guid: c0b6796e3774ca440b199c4e2476aa0c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9828711
+      objectReference: {fileID: 0}
+    - target: {fileID: 4655759042630319673, guid: c0b6796e3774ca440b199c4e2476aa0c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.18429439
+      objectReference: {fileID: 0}
+    - target: {fileID: 4655759042630319673, guid: c0b6796e3774ca440b199c4e2476aa0c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 21.24
+      objectReference: {fileID: 0}
     - target: {fileID: 4862921172254208924, guid: c0b6796e3774ca440b199c4e2476aa0c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.80026
