@@ -7,6 +7,7 @@ public class player : MonoBehaviour
 
     [SerializeField] private float moveSpeed = 10f;
     [SerializeField] private float tiltSpeed = 5f;
+    [SerializeField] private float tiltAmount= 20f;
     [SerializeField] private float spinSpeed = 360f;
 
 
@@ -18,9 +19,9 @@ public class player : MonoBehaviour
 
 
     [SerializeField] private Transform beyblade_mesh;
+    [SerializeField] private Transform spin_empty;
+    [SerializeField] private CharacterController characterController;
     private float spinY = 0;
-
-
     private float verticalVelocity = 0f;
     [SerializeField] private float gravity = 10f;
     [SerializeField] private float jumpForce = 3f;
@@ -36,7 +37,7 @@ public class player : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        tiltVector = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, transform.localEulerAngles.z);
+        tiltVector = new Vector3(spin_empty.localEulerAngles.x, spin_empty.localEulerAngles.y, spin_empty.localEulerAngles.z);
         HUD.instance.SetHealth(GameManager.instance.playerHealth.Health);
     }
 
@@ -45,7 +46,7 @@ public class player : MonoBehaviour
     {
         playerMoving = false;
         Vector2 inputVector = new Vector2(0, 0);
-        Vector3 currentTilt = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, transform.localEulerAngles.z);
+        Vector3 currentTilt = new Vector3(spin_empty.localEulerAngles.x, spin_empty.localEulerAngles.y, spin_empty.localEulerAngles.z);
         spinY += spinSpeed * Time.deltaTime;
 
         if (Input.GetKey(KeyCode.W))
@@ -84,7 +85,7 @@ public class player : MonoBehaviour
             currentTilt.x = Mathf.LerpAngle(currentTilt.x, targetTilt.x, Time.deltaTime * tiltSpeed);
             currentTilt.z = Mathf.LerpAngle(currentTilt.z, targetTilt.z, Time.deltaTime * tiltSpeed);
 
-            transform.localEulerAngles = currentTilt;
+            spin_empty.localEulerAngles = currentTilt;
         }
 
         if (!playerMoving)
@@ -94,7 +95,7 @@ public class player : MonoBehaviour
             currentTilt.x = Mathf.LerpAngle(currentTilt.x, targetTilt.x, Time.deltaTime * tiltSpeed);
             currentTilt.z = Mathf.LerpAngle(currentTilt.z, targetTilt.z, Time.deltaTime * tiltSpeed);
 
-            transform.localEulerAngles = currentTilt;
+            spin_empty.localEulerAngles = currentTilt;
         }
 
         if (spinY >= 360f)
@@ -106,7 +107,7 @@ public class player : MonoBehaviour
 
         Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
     
-        if (Input.GetKeyDown(KeyCode.Space) && grounded)
+        if (Input.GetKeyDown(KeyCode.Space) && characterController.isGrounded)
         {
             verticalVelocity = jumpForce;
             grounded = false;
@@ -136,19 +137,9 @@ public class player : MonoBehaviour
         }
         else
         {
-            transform.position += (moveDir * Time.deltaTime * moveSpeed);
+            characterController.Move(moveDir * moveSpeed * Time.deltaTime);
         }
 
-
-        if (transform.position.y <= 0f)
-        {
-            Vector3 currentPosition = transform.position;
-            currentPosition.y = 0f;
-            transform.position = currentPosition;
-
-            verticalVelocity = 0f;
-            grounded = true;
-        }
 
         beyblade_mesh.localEulerAngles = new Vector3(beyblade_mesh.localEulerAngles.x, spinY, beyblade_mesh.localEulerAngles.z);
 
@@ -157,5 +148,6 @@ public class player : MonoBehaviour
     {
         GameManager.instance.playerHealth.Damage(damage);
         HUD.instance.SetHealth(GameManager.instance.playerHealth.Health);
+        spinSpeed = GameManager.instance.playerHealth.Health * 100;
     }
 }
