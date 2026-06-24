@@ -24,12 +24,16 @@ public class player : MonoBehaviour
     [SerializeField] private float dashTime = 0.1f;
     [SerializeField] private float jumpForce = 3f;
     [SerializeField] private float sensitivity = 3f;
+    [SerializeField] private float spinImpactMultiplier = 0.02f;
+    [SerializeField] private float bounceDecay = 5f;
 
 
 //VECTORS//
     private Vector3 tiltVector;
     private Vector3 targetTilt;
     private Vector3 dashDirection;
+    private Vector3 currentPlayerVelocity;
+    private Vector3 bounceVelocity;
     private Vector2 lastInputVector = new Vector2(0, 1);
 
 
@@ -46,6 +50,12 @@ public class player : MonoBehaviour
     private float lateralRotationSpeed;
     private float verticalRotationSpeed;
     private float cameraRotation = 0f;
+
+
+//LAYERS//
+    private int wallLayer;
+    private int enemyLayer;
+    private int groundLayer;
     
 
 //START
@@ -55,6 +65,11 @@ public class player : MonoBehaviour
         HUD.instance.SetHealth(GameManager.instance.playerHealth.Health);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+    //Assigning layerVariables
+        wallLayer = LayerMask.NameToLayer("Wall");
+        enemyLayer = LayerMask.NameToLayer("Enemy");
+        groundLayer = LayerMask.NameToLayer("Ground");
     }
 
 
@@ -204,14 +219,6 @@ public class player : MonoBehaviour
         Vector3 moveDir =
             transform.forward * currentInputVector.y +
             transform.right * currentInputVector.x;
-        
-    
-        if (Input.GetKeyDown(KeyCode.Space) && characterController.isGrounded)
-        {
-            verticalVelocity = jumpForce;
-            grounded = false;
-            
-        }
 
         moveDir.y = 0f;
         moveDir.Normalize();
@@ -225,9 +232,10 @@ public class player : MonoBehaviour
 
         moveDir.y = verticalVelocity;
 
-        if (dashing) {
-            characterController.Move(dashDirection * dashSpeed * Time.deltaTime);
 
+    //Dashing and Player Movement
+        if (dashing) {
+            currentPlayerVelocity = dashDirection * dashSpeed;
             dashTimer -= Time.deltaTime;
 
             if (dashTimer <= 0f)
@@ -235,7 +243,6 @@ public class player : MonoBehaviour
                 dashing = false;
             }
         }
-
         else {
             transform.Rotate(0f, lateralRotationSpeed, 0f);
 
@@ -243,14 +250,68 @@ public class player : MonoBehaviour
             cameraRotation = Mathf.Clamp(cameraRotation, -80f, 80f);
 
             playerCamera.localEulerAngles = new Vector3(cameraRotation, 0f, 0f);
-            characterController.Move(moveDir * moveSpeed * Time.deltaTime);      
+
+            currentPlayerVelocity = moveDir * moveSpeed;
         }
 
+        bounceVelocity = Vector3.Lerp(bounceVelocity, Vector3.zero, Time.deltaTime * bounceDecay);
+
+        Vector3 finalVelocity = currentPlayerVelocity + bounceVelocity;
+        characterController.Move(finalVelocity * Time.deltaTime);
+
+
+    //Mesh Rotation
         if (spinSpeed > 0)
         {
-                    beyblade_mesh.localEulerAngles = new Vector3(-90 + (40/math.pow(GameManager.instance.playerHealth.Health, 1.5f)), spinY, beyblade_mesh.localEulerAngles.z);
+            beyblade_mesh.localEulerAngles = new Vector3(-90 + (40 / Mathf.Pow(GameManager.instance.playerHealth.Health, 1.5f)), spinY, beyblade_mesh.localEulerAngles.z);
         }
+        }
+
+
+    //Bounce
+        //Bounce
+        private void OnControllerColliderHit(ControllerColliderHit hit)
+        {
+            if (hit.gameObject.layer == enemyLayer)
+            {
+                player enemyPlayer = hit.gameObject.GetComponentInParent<player>();
+
+                if (enemyPlayer != null && enemyPlayer != this)
+                {
+                    float collisionMoveSpeed = currentPlayerVelocity.magnitude + enemyPlayer.currentPlayerVelocity.magnitude;
+                    float collisionSpinSpeed = spinSpeed * spinImpactMultiplier + enemyPlayer.spinSpeed * spinImpactMultiplier;
+                    float collisionStrength = collisionMoveSpeed + collisionSpinSpeed;
+
+                    Vector3 bounceDirection = transform.position - enemyPlayer.transform.position;
+
+                    bounceDirection.y = 0f;
+                    bounceDirection.Normalize();
+
+                    bounceVelocity = bounceDirection * collisionStrength;
+
+                    dashing = false;
+                }
+            }
+
+            else if (hit.gameObject.layer == wallLayer)
+            {
+                float collisionMoveSpeed = currentPlayerVelocity.magnitude;
+                float collisionSpinSpeed = spinSpeed * spinImpactMultiplier;
+                float collisionStrength = collisionMoveSpeed + collisionSpinSpeed;
+
+                Vector3 bounceDirection = hit.normal;
+
+                bounceDirection.y = 0f;
+                bounceDirection.Normalize();
+
+                bounceVelocity = bounceDirection * collisionStrength;
+
+                dashing = false;
+            }
+
     }
+
+
     private void Damage(int damage) {
         GameManager.instance.playerHealth.Damage(damage);
         HUD.instance.SetHealth(GameManager.instance.playerHealth.Health);
