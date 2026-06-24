@@ -19,6 +19,7 @@ public class player : MonoBehaviour
     private Vector3 tiltVector;
     private Vector3 targetTilt;
     private Vector3 dashDirection;
+    private Vector2 lastInputVector = new Vector2(0, 0);
 
 
 //BOOLEANS//
@@ -49,51 +50,108 @@ public class player : MonoBehaviour
     private void Update(){
     //Variables
         playerMoving = false;
-        Vector2 inputVector = new Vector2(0, 0);
+        Vector2 currentInputVector = new Vector2(0, 0);
         Vector3 currentTilt = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, transform.localEulerAngles.z);
         spinY += spinSpeed * Time.deltaTime;
 
 
-    //Inputs
-        if (Input.GetKey(KeyCode.W)){
-            inputVector.y += 1;
+//Inputs
+
+//w
+        if (Input.GetKey(KeyCode.W) && !(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))){
+            currentInputVector.y += 1;
+            lastInputVector.y = 1;
+            lastInputVector.x = 0;
             playerMoving = true;
         }
 
-        if (Input.GetKey(KeyCode.A)){
-            inputVector.x -= 1;
+//a
+        if (Input.GetKey(KeyCode.A) && !(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S))){
+            currentInputVector.x -= 1;
+            lastInputVector.x = -1;
+            lastInputVector.y = 0;
             playerMoving = true;
         }
 
-        if (Input.GetKey(KeyCode.S)){
-            inputVector.y -= 1;
+//s
+        if (Input.GetKey(KeyCode.S) && !(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))){
+            currentInputVector.y -= 1;
+            lastInputVector.y = -1;
+            lastInputVector.x = 0;
             playerMoving = true;
         }
 
-        if (Input.GetKey(KeyCode.D)){
-            inputVector.x += 1;
+//d
+        if (Input.GetKey(KeyCode.D) && !(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S))){
+            currentInputVector.x += 1;
+            lastInputVector.x = 1;
+            lastInputVector.y = 0;
+            playerMoving = true;
+        }
+//up-left
+        if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A)){
+            currentInputVector.y += 1;
+            currentInputVector.x -= 1;
+            lastInputVector.y = 1;
+            lastInputVector.x = -1;
             playerMoving = true;
         }
 
+//up-right
+        if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D)){
+            currentInputVector.y += 1;
+            currentInputVector.x += 1;
+            lastInputVector.y = 1;
+            lastInputVector.x = 1;
+            playerMoving = true;
+        }
+
+//down-left
+        if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.A)){
+            currentInputVector.y -= 1;
+            currentInputVector.x -= 1;
+            lastInputVector.y = -1;
+            lastInputVector.x = -1;
+            playerMoving = true;
+        }
+
+//down-right
+        if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.D)){
+            currentInputVector.y -= 1;
+            currentInputVector.x += 1;
+            lastInputVector.y = -1;
+            lastInputVector.x = 1;
+            playerMoving = true;
+        }
+
+
+//self-damage
          if (Input.GetKeyDown(KeyCode.H)){
             Damage(2);
         }
 
+//jump
         if (Input.GetKeyDown(KeyCode.Space) && grounded){
             verticalVelocity = jumpForce;
             grounded = false;
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !dashing && inputVector != Vector2.zero){
-            dashDirection = new Vector3(inputVector.x, 0f, inputVector.y).normalized;
+//dash and dive
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !dashing){
+            dashDirection = new Vector3(lastInputVector.x, 0f, lastInputVector.y).normalized;
             dashing = true;
             dashTimer = dashTime;
+
+            if (grounded == false){
+                float diveDownForce = -1.5f;
+                dashDirection = new Vector3(lastInputVector.x, diveDownForce, lastInputVector.y).normalized;
+            }
         }
 
 
     //Tilt SLERP
         if (playerMoving){
-            targetTilt = new Vector3(tiltVector.x + inputVector.y * 20f, tiltVector.y, tiltVector.z + -inputVector.x * 20f);
+            targetTilt = new Vector3(tiltVector.x + currentInputVector.y * 20f, tiltVector.y, tiltVector.z + -currentInputVector.x * 20f);
 
             currentTilt.x = Mathf.LerpAngle(currentTilt.x, targetTilt.x, Time.deltaTime * tiltSpeed);
             currentTilt.z = Mathf.LerpAngle(currentTilt.z, targetTilt.z, Time.deltaTime * tiltSpeed);
@@ -113,13 +171,13 @@ public class player : MonoBehaviour
             spinY -= 360f;
         }
 
-        inputVector = inputVector.normalized;
+        currentInputVector = currentInputVector.normalized;
 
-        Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
+        Vector3 moveDir = new Vector3(currentInputVector.x, 0f, currentInputVector.y);
 
         verticalVelocity -= gravity * Time.deltaTime;
 
-        moveDir = new Vector3(inputVector.x, verticalVelocity, inputVector.y);
+        moveDir = new Vector3(currentInputVector.x, verticalVelocity, currentInputVector.y);
 
         if (dashing){
             transform.position += dashDirection * dashSpeed * Time.deltaTime;
@@ -132,7 +190,7 @@ public class player : MonoBehaviour
             }
         }
         else{
-            transform.position += (moveDir * Time.deltaTime * moveSpeed);
+            transform.position += (moveDir * moveSpeed * Time.deltaTime);
         }
 
 
