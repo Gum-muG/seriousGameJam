@@ -19,6 +19,7 @@ public class player : MonoBehaviour
     [SerializeField] private CharacterController characterController;
     [SerializeField] private Transform playerCameraEmpty;
     [SerializeField] private Transform playerCamera;
+    [SerializeField] private MeshCollider collision;
 
     [SerializeField] private float gravity = 10f;
     [SerializeField] private float dashSpeed = 30f;
@@ -28,6 +29,8 @@ public class player : MonoBehaviour
     [SerializeField] private float cameraDistance = -9f;
     [SerializeField] private float spinImpactMultiplier = 0.02f;
     [SerializeField] private float bounceDecay = 5f;
+    [SerializeField] private float bounceIntensity = .5f;
+    [SerializeField] private float bounceHeight = 2f;
 
 
 //VECTORS//
@@ -53,14 +56,12 @@ public class player : MonoBehaviour
     private float verticalRotationSpeed;
     private float cameraRotation = 0f;
     private Ray ray;
-    private int playerLayer;
-
-
+    
 //LAYERS//
     private int wallLayer;
     private int enemyLayer;
     private int groundLayer;
-    
+    private int playerLayer;
 
 //START
     void Start()
@@ -69,12 +70,12 @@ public class player : MonoBehaviour
         HUD.instance.SetHealth(GameManager.instance.playerHealth.Health);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        playerLayer = LayerMask.NameToLayer("Default");
-
+        
     //Assigning layerVariables
         wallLayer = LayerMask.NameToLayer("Wall");
         enemyLayer = LayerMask.NameToLayer("Enemy");
         groundLayer = LayerMask.NameToLayer("Ground");
+        playerLayer = LayerMask.NameToLayer("Player");
     }
 
 
@@ -274,24 +275,23 @@ public class player : MonoBehaviour
         Vector3 finalVelocity = currentPlayerVelocity + bounceVelocity;
         characterController.Move(finalVelocity * Time.deltaTime);
 
-
     //Mesh Rotation
         if (spinSpeed > 0)
         {
             beyblade_mesh.localEulerAngles = new Vector3(-90 + (40 / Mathf.Pow(GameManager.instance.playerHealth.Health, 1.5f)), spinY, beyblade_mesh.localEulerAngles.z);
         }
-        }
+    }
 
 
     //Bounce
-        //Bounce
-        private void OnControllerColliderHit(ControllerColliderHit hit)
-        {
-            if (hit.gameObject.layer == enemyLayer)
+    //Bounce
+    private void OnTriggerEnter(Collider other)
+    {
+            if (other.gameObject.layer == enemyLayer)
             {
-                player enemyPlayer = hit.gameObject.GetComponentInParent<player>();
-
-                if (enemyPlayer != null && enemyPlayer != this)
+                enemy enemyPlayer = other.gameObject.GetComponentInParent<enemy>();
+                
+                if (enemyPlayer != null)
                 {
                     float collisionMoveSpeed = currentPlayerVelocity.magnitude + enemyPlayer.currentPlayerVelocity.magnitude;
                     float collisionSpinSpeed = spinSpeed * spinImpactMultiplier + enemyPlayer.spinSpeed * spinImpactMultiplier;
@@ -299,6 +299,30 @@ public class player : MonoBehaviour
 
                     Vector3 bounceDirection = transform.position - enemyPlayer.transform.position;
 
+                    
+                    if (!dashing) bounceDirection.y = 0f;
+                    bounceDirection.Normalize();
+                    if (dashing) bounceDirection.y *= bounceHeight;
+
+                    bounceVelocity = bounceDirection * collisionStrength * bounceIntensity;
+                    bounceDirection.y = 0f;
+                    enemyPlayer.KnockBack(bounceVelocity);
+
+                    dashing = false;
+                }
+                
+            }
+            else if (other.gameObject.layer == wallLayer)
+            {
+                float collisionMoveSpeed = currentPlayerVelocity.magnitude;
+                float collisionSpinSpeed = spinSpeed * spinImpactMultiplier;
+                float collisionStrength = collisionMoveSpeed + collisionSpinSpeed;
+
+                ray = new Ray(collision.transform.position, (other.transform.position - collision.transform.position).normalized);
+                if (Physics.Raycast(ray, out RaycastHit hit))
+                {
+                    
+                    Vector3 bounceDirection = hit.normal;
                     bounceDirection.y = 0f;
                     bounceDirection.Normalize();
 
@@ -308,25 +332,7 @@ public class player : MonoBehaviour
                 }
             }
 
-            else if (hit.gameObject.layer == wallLayer)
-            {
-                float collisionMoveSpeed = currentPlayerVelocity.magnitude;
-                float collisionSpinSpeed = spinSpeed * spinImpactMultiplier;
-                float collisionStrength = collisionMoveSpeed + collisionSpinSpeed;
-
-                Vector3 bounceDirection = hit.normal;
-
-                bounceDirection.y = 0f;
-                bounceDirection.Normalize();
-
-                bounceVelocity = bounceDirection * collisionStrength;
-
-                dashing = false;
-            }
-
     }
-
-
     private void Damage(int damage) {
         GameManager.instance.playerHealth.Damage(damage);
         HUD.instance.SetHealth(GameManager.instance.playerHealth.Health);
