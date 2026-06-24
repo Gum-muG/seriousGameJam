@@ -18,6 +18,7 @@ public class player : MonoBehaviour
     [SerializeField] private Transform beyblade_mesh;
     [SerializeField] private Transform spin_empty;
     [SerializeField] private CharacterController characterController;
+    [SerializeField] private Transform playerCameraEmpty;
     [SerializeField] private Transform playerCamera;
 
     [SerializeField] private float gravity = 10f;
@@ -25,6 +26,7 @@ public class player : MonoBehaviour
     [SerializeField] private float dashTime = 0.1f;
     [SerializeField] private float jumpForce = 3f;
     [SerializeField] private float sensitivity = 3f;
+    [SerializeField] private float cameraDistance = -9f;
     [SerializeField] private float spinImpactMultiplier = 0.02f;
     [SerializeField] private float bounceDecay = 5f;
 
@@ -52,6 +54,8 @@ public class player : MonoBehaviour
     private float lateralRotationSpeed;
     private float verticalRotationSpeed;
     private float cameraRotation = 0f;
+    private Ray ray;
+    private int playerLayer;
 
 
 //LAYERS//
@@ -68,6 +72,7 @@ public class player : MonoBehaviour
         HUD.instance.SetHealth(GameManager.instance.playerHealth.Health);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        playerLayer = LayerMask.NameToLayer("Default");
 
     //Assigning layerVariables
         wallLayer = LayerMask.NameToLayer("Wall");
@@ -253,7 +258,17 @@ public class player : MonoBehaviour
             cameraRotation -= verticalRotationSpeed;
             cameraRotation = Mathf.Clamp(cameraRotation, -80f, 80f);
 
-            playerCamera.localEulerAngles = new Vector3(cameraRotation, 0f, 0f);
+            ray = new Ray(playerCameraEmpty.position, -playerCamera.forward);
+            if (Physics.SphereCast(ray, 0.2f, out RaycastHit hit, math.abs(cameraDistance), (1<<groundLayer)|(1<<wallLayer)))
+            {
+                playerCamera.localPosition = new Vector3(0,0,-hit.distance);
+            }
+            else
+            {
+                playerCamera.localPosition = new Vector3(0, 0, cameraDistance);
+            }
+
+            playerCameraEmpty.localEulerAngles = new Vector3(cameraRotation, 0f, 0f);
 
             currentPlayerVelocity = moveDir * moveSpeed;
         }
