@@ -146,7 +146,7 @@ public class player : MonoBehaviour
             dashing = true;
             dashTimer = dashTime;
 
-            if (grounded == false){
+            if (!characterController.isGrounded){
                 float diveDownForce = -1.5f;
                 dashDirection = new Vector3(lastInputVector.x, diveDownForce, lastInputVector.y).normalized;
             }
@@ -197,7 +197,7 @@ public class player : MonoBehaviour
         moveDir = new Vector3(currentInputVector.x, verticalVelocity, currentInputVector.y);
 
         if (dashing) {
-            transform.position += dashDirection * dashSpeed * Time.deltaTime;
+            characterController.Move(dashDirection * dashSpeed * Time.deltaTime);
 
             dashTimer -= Time.deltaTime;
 
@@ -208,16 +208,6 @@ public class player : MonoBehaviour
         }
         else {
             characterController.Move(moveDir * moveSpeed * Time.deltaTime);
-        }
-
-
-        if (transform.position.y <= 0f) {
-            Vector3 currentPosition = transform.position;
-            currentPosition.y = 0f;
-            transform.position = currentPosition;
-
-            verticalVelocity = 0f;
-            grounded = true;
         }
 
         beyblade_mesh.localEulerAngles = new Vector3(beyblade_mesh.localEulerAngles.x, spinY, beyblade_mesh.localEulerAngles.z);
