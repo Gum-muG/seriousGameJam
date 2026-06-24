@@ -278,7 +278,7 @@ public class player : MonoBehaviour
 
         Vector3 finalVelocity = currentPlayerVelocity + bounceVelocity;
         characterController.Move(finalVelocity * Time.deltaTime);
-
+        spinSpeed = GameManager.instance.playerHealth.Health * 200;
     //Mesh Rotation
         if (spinSpeed > 0)
         {
@@ -310,8 +310,8 @@ public class player : MonoBehaviour
 
                     bounceVelocity = bounceDirection * collisionStrength * bounceIntensity;
                     bounceDirection.y = 0f;
-                    enemyPlayer.KnockBack(bounceVelocity);
-
+                    enemyPlayer.Damage(bounceVelocity, 2);
+                    Damage(2);
                     dashing = false;
                 }
                 
@@ -336,7 +336,7 @@ public class player : MonoBehaviour
                 }
             }
 
-            spinSpeed = GameManager.instance.playerHealth.Health * 200;
+            
 
     }
             

@@ -28,6 +28,8 @@ public class enemy : MonoBehaviour
     [SerializeField] private Transform spin_empty;
     [SerializeField] private Transform player;
     [SerializeField] private MeshCollider collision;
+    [SerializeField] private Transform canvas;
+    [SerializeField] private EnemyHealth canvasScript;
 
     [SerializeField] private float gravity = 10f;
     [SerializeField] private float dashSpeed = 30f;
@@ -55,6 +57,8 @@ public class enemy : MonoBehaviour
     private float spinY = 0;
     private float verticalVelocity = 0f;
     private float dashTimer = 0f;
+
+    private HealthComponent health = new HealthComponent(10, 10);
 
     //LAYERS//
     private int wallLayer;
@@ -121,8 +125,10 @@ public class enemy : MonoBehaviour
 
         moveDir = new Vector3(currentInputVector.x, verticalVelocity, currentInputVector.y);
 
+        canvas.LookAt(player.Find("Camera/Main Camera").transform);
+        canvas.Rotate(new Vector3(0, 180, 0));
 
-
+        spinSpeed = health.Health * 200;
         if (spinSpeed > 0)
         {
             beyblade_mesh.localEulerAngles = new Vector3(-90 + (40/math.pow(GameManager.instance.playerHealth.Health, 1.5f)), spinY, beyblade_mesh.localEulerAngles.z);
@@ -138,14 +144,15 @@ public class enemy : MonoBehaviour
         else playerMoving = false;
         agent.Move(-bounceVelocity/200);
     }
-    public void KnockBack(Vector3 bounceVelocity)
+    public void Damage(Vector3 bounceVelocity, int damage)
     {
         this.bounceVelocity = bounceVelocity;
-    }
-    private void Damage(int damage) {
-        GameManager.instance.playerHealth.Damage(damage);
-        HUD.instance.SetHealth(GameManager.instance.playerHealth.Health);
-        spinSpeed = GameManager.instance.playerHealth.Health * 200;
+        health.Health -= damage;
+        canvasScript.setHealth(health.Health);
+        if (health.Health == 0)
+        {
+            Destroy(gameObject);
+        }
     }
     private void ChasePlayer()
     {
