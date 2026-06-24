@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Assemblies;
 
 public class enemy : MonoBehaviour
 {
+
+    public NavMeshAgent agent;
 
 //PLAYER STATS//
     [SerializeField] private float moveSpeed = 10f;
@@ -17,6 +20,7 @@ public class enemy : MonoBehaviour
     [SerializeField] private Transform beyblade_mesh;
     [SerializeField] private Transform spin_empty;
     [SerializeField] private CharacterController characterController;
+    [SerializeField] private Transform player;
 
     [SerializeField] private float gravity = 10f;
     [SerializeField] private float dashSpeed = 30f;
