@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Assemblies;
@@ -40,12 +41,13 @@ public class player : MonoBehaviour
     private Vector3 currentPlayerVelocity;
     private Vector3 bounceVelocity;
     private Vector2 lastInputVector = new Vector2(0, 1);
+    private Vector3 startingPosition;
 
 
 //BOOLEANS//
     private bool playerMoving = false;
-    private bool grounded = true;
     private bool dashing = false;
+    private bool playerAlive;
 
 
 //VARIABLES//
@@ -66,6 +68,7 @@ public class player : MonoBehaviour
 //START
     void Start()
     {
+        startingPosition = transform.position;
         tiltVector = new Vector3(spin_empty.localEulerAngles.x, spin_empty.localEulerAngles.y, spin_empty.localEulerAngles.z);
         HUD.instance.SetHealth(GameManager.instance.playerHealth.Health);
         Cursor.visible = false;
@@ -76,6 +79,9 @@ public class player : MonoBehaviour
         enemyLayer = LayerMask.NameToLayer("Enemy");
         groundLayer = LayerMask.NameToLayer("Ground");
         playerLayer = LayerMask.NameToLayer("Player");
+
+    //Setting bools
+        playerAlive = true;
     }
 
 
@@ -169,7 +175,6 @@ public class player : MonoBehaviour
 //jump
         if (Input.GetKeyDown(KeyCode.Space) && characterController.isGrounded){
             verticalVelocity = jumpForce;
-            grounded = false;
         }
 
 //dash and dive
@@ -231,7 +236,6 @@ public class player : MonoBehaviour
 
         if (characterController.isGrounded && verticalVelocity < 0f){
             verticalVelocity = -1f;
-            grounded = true;
         }
 
         verticalVelocity -= gravity * Time.deltaTime;
@@ -327,15 +331,29 @@ public class player : MonoBehaviour
                     bounceDirection.Normalize();
 
                     bounceVelocity = bounceDirection * collisionStrength;
-
+                    Damage(2);
                     dashing = false;
                 }
             }
 
+            spinSpeed = GameManager.instance.playerHealth.Health * 200;
+
     }
+            
+
+    private void respawnPlayer()
+    {
+        respawnManager.instance.triggerRespawnScreen(startingPosition);
+    }
+
     private void Damage(int damage) {
         GameManager.instance.playerHealth.Damage(damage);
         HUD.instance.SetHealth(GameManager.instance.playerHealth.Health);
-        spinSpeed = GameManager.instance.playerHealth.Health * 200;
+        if (GameManager.instance.playerHealth.Health == 0)
+        {
+            respawnPlayer();
+        } 
     }
+
+  
 }

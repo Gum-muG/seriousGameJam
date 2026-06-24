@@ -10,12 +10,10 @@ public class GameManager : MonoBehaviour
     {
         if (instance != null && instance != this)
         {
-            Debug.Log("Destroy " + this);
             Destroy(this);
         }
         else
         {
-            Debug.Log(this);
             instance = this;
         }
     }
