@@ -23,6 +23,7 @@ public class player : MonoBehaviour
     [SerializeField] private float dashSpeed = 30f;
     [SerializeField] private float dashTime = 0.1f;
     [SerializeField] private float jumpForce = 3f;
+    [SerializeField] private float sensitivity = 3f;
 
 
 //VECTORS//
@@ -52,6 +53,8 @@ public class player : MonoBehaviour
     {
         tiltVector = new Vector3(spin_empty.localEulerAngles.x, spin_empty.localEulerAngles.y, spin_empty.localEulerAngles.z);
         HUD.instance.SetHealth(GameManager.instance.playerHealth.Health);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
 
@@ -62,8 +65,8 @@ public class player : MonoBehaviour
         Vector2 currentInputVector = new Vector2(0, 0);
         Vector3 currentTilt = new Vector3(spin_empty.localEulerAngles.x, spin_empty.localEulerAngles.y, spin_empty.localEulerAngles.z);
         spinY += spinSpeed * Time.deltaTime;
-        lateralRotationSpeed = Input.GetAxis("Mouse X");
-        verticalRotationSpeed = Input.GetAxis("Mouse Y");
+        lateralRotationSpeed = Input.GetAxis("Mouse X") * sensitivity;
+        verticalRotationSpeed = Input.GetAxis("Mouse Y") * sensitivity;
 
 
 //Inputs
@@ -239,7 +242,7 @@ public class player : MonoBehaviour
             cameraRotation -= verticalRotationSpeed;
             cameraRotation = Mathf.Clamp(cameraRotation, -80f, 80f);
 
-playerCamera.localEulerAngles = new Vector3(cameraRotation, 0f, 0f);
+            playerCamera.localEulerAngles = new Vector3(cameraRotation, 0f, 0f);
             characterController.Move(moveDir * moveSpeed * Time.deltaTime);      
         }
 

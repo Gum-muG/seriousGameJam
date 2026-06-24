@@ -27,12 +27,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 298702307519647148}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.1872099, y: 0, z: 0, w: 0.98231995}
+  m_LocalRotation: {x: 0.1872099, y: -0, z: -0, w: 0.98231995}
   m_LocalPosition: {x: 0, y: 3, z: -5.23}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4862921172254208924}
+  m_Father: {fileID: 5168209391283752834}
   m_LocalEulerAnglesHint: {x: 21.58, y: 0, z: 0}
 --- !u!20 &4207220282490165059
 Camera:
@@ -137,6 +137,38 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!1 &540787395975722232
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5168209391283752834}
+  m_Layer: 0
+  m_Name: Camera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5168209391283752834
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 540787395975722232}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4655759042630319673}
+  m_Father: {fileID: 4862921172254208924}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2752482583577090694
 GameObject:
   m_ObjectHideFlags: 0
@@ -181,7 +213,7 @@ GameObject:
   - component: {fileID: 6196376192225073562}
   - component: {fileID: 1121512138673739748}
   m_Layer: 0
-  m_Name: Player 1
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -201,7 +233,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1790660167997265895}
-  - {fileID: 4655759042630319673}
+  - {fileID: 5168209391283752834}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6196376192225073562
@@ -223,6 +255,7 @@ MonoBehaviour:
   beyblade_mesh: {fileID: 8505246165011784735}
   spin_empty: {fileID: 1790660167997265895}
   characterController: {fileID: 1121512138673739748}
+  playerCamera: {fileID: 0}
   gravity: 10
   dashSpeed: 60
   dashTime: 0.1
