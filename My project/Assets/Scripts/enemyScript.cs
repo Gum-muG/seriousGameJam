@@ -3,7 +3,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Assemblies;
 
-public class player : MonoBehaviour
+public class enemy : MonoBehaviour
 {
 
 //PLAYER STATS//
