@@ -27,7 +27,7 @@ public class player : MonoBehaviour
     private Vector3 tiltVector;
     private Vector3 targetTilt;
     private Vector3 dashDirection;
-    private Vector2 lastInputVector = new Vector2(0, 0);
+    private Vector2 lastInputVector = new Vector2(0, 1);
 
 
 //BOOLEANS//
@@ -40,6 +40,8 @@ public class player : MonoBehaviour
     private float spinY = 0;
     private float verticalVelocity = 0f;
     private float dashTimer = 0f;
+    private float lateralRotationSpeed;
+    private float verticalRotationSpeed;
     
 
 //START
@@ -57,6 +59,8 @@ public class player : MonoBehaviour
         Vector2 currentInputVector = new Vector2(0, 0);
         Vector3 currentTilt = new Vector3(spin_empty.localEulerAngles.x, spin_empty.localEulerAngles.y, spin_empty.localEulerAngles.z);
         spinY += spinSpeed * Time.deltaTime;
+        lateralRotationSpeed = Input.GetAxis("Mouse X");
+        verticalRotationSpeed = Input.GetAxis("Mouse Y");
 
 
 //Inputs
@@ -92,6 +96,7 @@ public class player : MonoBehaviour
             lastInputVector.y = 0;
             playerMoving = true;
         }
+
 //up-left
         if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A)){
             currentInputVector.y += 1;
@@ -135,27 +140,39 @@ public class player : MonoBehaviour
         }
 
 //jump
-        if (Input.GetKeyDown(KeyCode.Space) && grounded){
+        if (Input.GetKeyDown(KeyCode.Space) && characterController.isGrounded){
             verticalVelocity = jumpForce;
             grounded = false;
         }
 
 //dash and dive
         if (Input.GetKeyDown(KeyCode.LeftShift) && !dashing){
-            dashDirection = new Vector3(lastInputVector.x, 0f, lastInputVector.y).normalized;
+            dashDirection =
+                transform.forward * lastInputVector.y +
+                transform.right * lastInputVector.x;
+
+            dashDirection.y = 0f;
+            dashDirection.Normalize();
+
             dashing = true;
             dashTimer = dashTime;
 
             if (!characterController.isGrounded){
                 float diveDownForce = -1.5f;
-                dashDirection = new Vector3(lastInputVector.x, diveDownForce, lastInputVector.y).normalized;
+
+                dashDirection =
+                    transform.forward * lastInputVector.y +
+                    transform.right * lastInputVector.x;
+
+                dashDirection.y = diveDownForce;
+                dashDirection.Normalize();
             }
         }
 
 
     //Tilt SLERP
         if (playerMoving){
-            targetTilt = new Vector3(tiltVector.x + currentInputVector.y * 20f, tiltVector.y, tiltVector.z + -currentInputVector.x * 20f);
+            targetTilt = new Vector3(tiltVector.x + currentInputVector.y * tiltAmount, tiltVector.y, tiltVector.z + -currentInputVector.x * tiltAmount);
 
             currentTilt.x = Mathf.LerpAngle(currentTilt.x, targetTilt.x, Time.deltaTime * tiltSpeed);
             currentTilt.z = Mathf.LerpAngle(currentTilt.z, targetTilt.z, Time.deltaTime * tiltSpeed);
@@ -168,6 +185,7 @@ public class player : MonoBehaviour
             currentTilt.x = Mathf.LerpAngle(currentTilt.x, targetTilt.x, Time.deltaTime * tiltSpeed);
             currentTilt.z = Mathf.LerpAngle(currentTilt.z, targetTilt.z, Time.deltaTime * tiltSpeed);
 
+
             spin_empty.localEulerAngles = currentTilt;
         }
 
@@ -177,24 +195,21 @@ public class player : MonoBehaviour
 
         currentInputVector = currentInputVector.normalized;
 
-        Vector3 moveDir = new Vector3(currentInputVector.x, 0f, currentInputVector.y);
-    
-        if (Input.GetKeyDown(KeyCode.Space) && characterController.isGrounded)
-        {
-            verticalVelocity = jumpForce;
-            grounded = false;
-        }
+        Vector3 moveDir =
+            transform.forward * currentInputVector.y +
+            transform.right * currentInputVector.x;
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !dashing && currentInputVector != Vector2.zero)
-        {
-            dashDirection = new Vector3(currentInputVector.x, 0f, currentInputVector.y).normalized;
-            dashing = true;
-            dashTimer = dashTime;
+        moveDir.y = 0f;
+        moveDir.Normalize();
+
+        if (characterController.isGrounded && verticalVelocity < 0f){
+            verticalVelocity = -1f;
+            grounded = true;
         }
 
         verticalVelocity -= gravity * Time.deltaTime;
 
-        moveDir = new Vector3(currentInputVector.x, verticalVelocity, currentInputVector.y);
+        moveDir.y = verticalVelocity;
 
         if (dashing) {
             characterController.Move(dashDirection * dashSpeed * Time.deltaTime);
@@ -206,8 +221,10 @@ public class player : MonoBehaviour
                 dashing = false;
             }
         }
+
         else {
-            characterController.Move(moveDir * moveSpeed * Time.deltaTime);
+            transform.Rotate(0f, lateralRotationSpeed, 0f);
+            characterController.Move(moveDir * moveSpeed * Time.deltaTime);      
         }
 
         beyblade_mesh.localEulerAngles = new Vector3(beyblade_mesh.localEulerAngles.x, spinY, beyblade_mesh.localEulerAngles.z);
