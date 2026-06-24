@@ -29,6 +29,7 @@ public class respawnManager : MonoBehaviour
     
     public void triggerRespawnScreen(Vector3 startingPosition)
     {
+        Time.timeScale = 0f;
         startingPos = startingPosition;
         respawnScreenUI.SetActive(true);
         Cursor.visible = true;
