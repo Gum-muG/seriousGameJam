@@ -37,6 +37,7 @@ public class player : MonoBehaviour
     void Start()
     {
         tiltVector = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, transform.localEulerAngles.z);
+        HUD.instance.SetHealth(GameManager.instance.playerHealth.Health);
     }
 
     // Update is called once per frame
@@ -69,6 +70,11 @@ public class player : MonoBehaviour
         {
             inputVector.x += 1;
             playerMoving = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            Damage(2);
         }
 
         if (playerMoving)
@@ -150,5 +156,6 @@ public class player : MonoBehaviour
     private void Damage(int damage)
     {
         GameManager.instance.playerHealth.Damage(damage);
+        HUD.instance.SetHealth(GameManager.instance.playerHealth.Health);
     }
 }
