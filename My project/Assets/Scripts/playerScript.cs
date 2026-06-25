@@ -18,7 +18,8 @@ public class player : MonoBehaviour
     [SerializeField] private Transform beyblade_mesh;
     [SerializeField] private Transform spin_empty;
     [SerializeField] private CharacterController characterController;
-    [SerializeField] private Transform playerCameraEmpty;
+    [SerializeField] private Transform playerCameraOrbit;
+    [SerializeField] private Transform playerCameraTarget;
     [SerializeField] private Transform playerCamera;
     [SerializeField] private MeshCollider collision;
 
@@ -27,6 +28,7 @@ public class player : MonoBehaviour
     [SerializeField] private float dashTime = 0.1f;
     [SerializeField] private float jumpForce = 3f;
     [SerializeField] private float sensitivity = 3f;
+    [SerializeField] private float cameraSpeed = .2f;
     [SerializeField] private float cameraDistance = -9f;
     [SerializeField] private float spinImpactMultiplier = 0.02f;
     [SerializeField] private float bounceDecay = 5f;
@@ -42,6 +44,7 @@ public class player : MonoBehaviour
     private Vector3 bounceVelocity;
     private Vector2 lastInputVector = new Vector2(0, 1);
     private Vector3 startingPosition;
+    private Vector3 targetCameraPos;
 
 
 //BOOLEANS//
@@ -259,19 +262,21 @@ public class player : MonoBehaviour
             cameraRotation -= verticalRotationSpeed;
             cameraRotation = Mathf.Clamp(cameraRotation, -80f, 80f);
 
-            ray = new Ray(playerCameraEmpty.position, -playerCamera.forward);
+            ray = new Ray(playerCameraOrbit.position, -playerCamera.forward);
             if (Physics.SphereCast(ray, 0.2f, out RaycastHit hit, math.abs(cameraDistance), (1<<groundLayer)|(1<<wallLayer)))
             {
-                playerCamera.localPosition = new Vector3(0,0,-hit.distance);
+                playerCameraTarget.localPosition = new Vector3(0,0,-hit.distance);
             }
             else
             {
-                playerCamera.localPosition = new Vector3(0, 0, cameraDistance);
+                playerCameraTarget.localPosition = new Vector3(0, 0, cameraDistance);
             }
 
-            playerCameraEmpty.localEulerAngles = new Vector3(cameraRotation, 0f, 0f);
+            playerCameraOrbit.localEulerAngles = new Vector3(cameraRotation, 0f, 0f);
 
             currentPlayerVelocity = moveDir * moveSpeed;
+            playerCamera.position = Vector3.Lerp(playerCamera.position, playerCameraTarget.position, Time.deltaTime * cameraSpeed);
+            playerCamera.rotation = Quaternion.Lerp(playerCamera.rotation, playerCameraTarget.rotation, Time.deltaTime * cameraSpeed);
         }
 
         bounceVelocity = Vector3.Lerp(bounceVelocity, Vector3.zero, Time.deltaTime * bounceDecay);
@@ -282,62 +287,57 @@ public class player : MonoBehaviour
     //Mesh Rotation
         if (spinSpeed > 0)
         {
-            beyblade_mesh.localEulerAngles = new Vector3(-90 + (40 / Mathf.Pow(GameManager.instance.playerHealth.Health, 1.5f)), spinY, beyblade_mesh.localEulerAngles.z);
+            beyblade_mesh.localEulerAngles = new Vector3(40 / Mathf.Pow(GameManager.instance.playerHealth.Health, 1.5f), spinY, beyblade_mesh.localEulerAngles.z);
         }
     }
 
-
-    //Bounce
     //Bounce
     private void OnTriggerEnter(Collider other)
     {
-            if (other.gameObject.layer == enemyLayer)
+        if (other.gameObject.layer == enemyLayer)
+        {
+            enemy enemyPlayer = other.gameObject.GetComponentInParent<enemy>();
+            
+            if (enemyPlayer != null)
             {
-                enemy enemyPlayer = other.gameObject.GetComponentInParent<enemy>();
-                
-                if (enemyPlayer != null)
-                {
-                    float collisionMoveSpeed = currentPlayerVelocity.magnitude + enemyPlayer.currentPlayerVelocity.magnitude;
-                    float collisionSpinSpeed = spinSpeed * spinImpactMultiplier + enemyPlayer.spinSpeed * spinImpactMultiplier;
-                    float collisionStrength = collisionMoveSpeed + collisionSpinSpeed;
-
-                    Vector3 bounceDirection = transform.position - enemyPlayer.transform.position;
-
-                    
-                    if (!dashing) bounceDirection.y = 0f;
-                    bounceDirection.Normalize();
-                    if (dashing) bounceDirection.y *= bounceHeight;
-
-                    bounceVelocity = bounceDirection * collisionStrength * bounceIntensity;
-                    bounceDirection.y = 0f;
-                    enemyPlayer.Damage(bounceVelocity, 2);
-                    Damage(2);
-                    dashing = false;
-                }
-                
-            }
-            else if (other.gameObject.layer == wallLayer)
-            {
-                float collisionMoveSpeed = currentPlayerVelocity.magnitude;
-                float collisionSpinSpeed = spinSpeed * spinImpactMultiplier;
+                float collisionMoveSpeed = currentPlayerVelocity.magnitude + enemyPlayer.currentPlayerVelocity.magnitude;
+                float collisionSpinSpeed = spinSpeed * spinImpactMultiplier + enemyPlayer.spinSpeed * spinImpactMultiplier;
                 float collisionStrength = collisionMoveSpeed + collisionSpinSpeed;
 
-                ray = new Ray(collision.transform.position, (other.transform.position - collision.transform.position).normalized);
-                if (Physics.Raycast(ray, out RaycastHit hit))
-                {
-                    
-                    Vector3 bounceDirection = hit.normal;
-                    bounceDirection.y = 0f;
-                    bounceDirection.Normalize();
+                Vector3 bounceDirection = transform.position - enemyPlayer.transform.position;
 
-                    bounceVelocity = bounceDirection * collisionStrength;
-                    Damage(2);
-                    dashing = false;
-                }
+                
+                if (!dashing) bounceDirection.y = 0f;
+                bounceDirection.Normalize();
+                if (dashing) bounceDirection.y *= bounceHeight;
+
+                bounceVelocity = bounceDirection * collisionStrength * bounceIntensity;
+                bounceDirection.y = 0f;
+                enemyPlayer.Damage(bounceVelocity, 2);
+                Damage(2);
+                dashing = false;
             }
-
             
+        }
+        else if (other.gameObject.layer == wallLayer)
+        {
+            float collisionMoveSpeed = currentPlayerVelocity.magnitude;
+            float collisionSpinSpeed = spinSpeed * spinImpactMultiplier;
+            float collisionStrength = collisionMoveSpeed + collisionSpinSpeed;
 
+            ray = new Ray(collision.transform.position, (other.transform.position - collision.transform.position).normalized);
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                
+                Vector3 bounceDirection = hit.normal;
+                bounceDirection.y = 0f;
+                bounceDirection.Normalize();
+
+                bounceVelocity = bounceDirection * collisionStrength;
+                Damage(2);
+                dashing = false;
+            }
+        }
     }
             
 

@@ -9,7 +9,7 @@ public class enemy : MonoBehaviour
 
     public NavMeshAgent agent;
 
-    public float timeBetweenAttacks;
+
     bool alreadyAttacked;
 
     public float sightRange, attackRange;
@@ -27,6 +27,7 @@ public class enemy : MonoBehaviour
     [SerializeField] private Transform beyblade_mesh;
     [SerializeField] private Transform spin_empty;
     [SerializeField] private Transform player;
+    [SerializeField] private Transform playerCamera;
     [SerializeField] private MeshCollider collision;
     [SerializeField] private Transform canvas;
     [SerializeField] private EnemyHealth canvasScript;
@@ -109,29 +110,15 @@ public class enemy : MonoBehaviour
             spinY -= 360f;
         }
 
-        currentInputVector = currentInputVector.normalized;
-
-        Vector3 moveDir = new Vector3(currentInputVector.x, 0f, currentInputVector.y);
-        
-
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !dashing && currentInputVector != Vector2.zero)
-        {
-            dashDirection = new Vector3(currentInputVector.x, 0f, currentInputVector.y).normalized;
-            dashing = true;
-            dashTimer = dashTime;
-        }
-
         verticalVelocity -= gravity * Time.deltaTime;
 
-        moveDir = new Vector3(currentInputVector.x, verticalVelocity, currentInputVector.y);
-
-        canvas.LookAt(player.Find("Camera/Main Camera").transform);
+        canvas.LookAt(playerCamera);
         canvas.Rotate(new Vector3(0, 180, 0));
 
         spinSpeed = health.Health * 200;
         if (spinSpeed > 0)
         {
-            beyblade_mesh.localEulerAngles = new Vector3(-90 + (40/math.pow(GameManager.instance.playerHealth.Health, 1.5f)), spinY, beyblade_mesh.localEulerAngles.z);
+            beyblade_mesh.localEulerAngles = new Vector3(40/math.pow(GameManager.instance.playerHealth.Health, 1.5f), spinY, beyblade_mesh.localEulerAngles.z);
         }
 
         bounceVelocity = Vector3.Lerp(bounceVelocity, Vector3.zero, Time.deltaTime * bounceDecay);
@@ -158,15 +145,5 @@ public class enemy : MonoBehaviour
     {
         agent.SetDestination(player.position);
         playerMoving = true;
-    }
-    private void AttackPlayer()
-    {
-        alreadyAttacked = true;
-        
-        Invoke(nameof(ResetAttack), timeBetweenAttacks);
-    }
-    private void ResetAttack()
-    {
-        alreadyAttacked = false;
     }
 }
