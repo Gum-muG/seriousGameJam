@@ -195,8 +195,6 @@ public class player : MonoBehaviour
             dashTimer = dashTime;
 
             if (!characterController.isGrounded){
-                float diveDownForce = -1.5f;
-
                 dashDirection =
                     playerCameraOrbit.forward * lastInputVector.y +
                     transform.right * lastInputVector.x;
