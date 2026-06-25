@@ -116,9 +116,9 @@ public class enemy : MonoBehaviour
         canvas.Rotate(new Vector3(0, 180, 0));
 
         spinSpeed = health.Health * 200;
-        if (spinSpeed > 0)
+        if (health.Health > 0)
         {
-            beyblade_mesh.localEulerAngles = new Vector3(40/math.pow(GameManager.instance.playerHealth.Health, 1.5f), spinY, beyblade_mesh.localEulerAngles.z);
+            beyblade_mesh.localEulerAngles = new Vector3(40/math.pow(health.Health, 1.5f), spinY, beyblade_mesh.localEulerAngles.z);
         }
 
         bounceVelocity = Vector3.Lerp(bounceVelocity, Vector3.zero, Time.deltaTime * bounceDecay);

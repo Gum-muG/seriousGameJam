@@ -30,6 +30,8 @@ public class player : MonoBehaviour
     [SerializeField] private float sensitivity = 3f;
     [SerializeField] private float cameraSpeed = .2f;
     [SerializeField] private float cameraDistance = -9f;
+    [SerializeField] private float cameraTilt = 3f;
+    [SerializeField] private float cameraTiltSpeed = 2f;
     [SerializeField] private float spinImpactMultiplier = 0.02f;
     [SerializeField] private float bounceDecay = 5f;
     [SerializeField] private float bounceIntensity = .5f;
@@ -271,7 +273,7 @@ public class player : MonoBehaviour
             {
                 playerCameraTarget.localPosition = new Vector3(0, 0, cameraDistance);
             }
-
+            playerCameraTarget.localRotation = Quaternion.Lerp(playerCameraTarget.localRotation, Quaternion.Euler(0, 0, -currentInputVector.x * cameraTilt), cameraTiltSpeed);
             playerCameraOrbit.localEulerAngles = new Vector3(cameraRotation, 0f, 0f);
 
             currentPlayerVelocity = moveDir * moveSpeed;
