@@ -12,6 +12,7 @@ public class player : MonoBehaviour
     [SerializeField] private float tiltSpeed = 5f;
     [SerializeField] private float tiltAmount= 20f;
     [SerializeField] private float spinSpeed = 360f;
+    public float SpinSpeed => spinSpeed;
 
 
 //REFERENCES//
@@ -204,11 +205,13 @@ public class player : MonoBehaviour
             dashTimer = dashTime;
 
             if (!characterController.isGrounded){
+                float diveDownForce = -1.5f;
+
                 dashDirection =
-                    playerCameraOrbit.forward * lastInputVector.y +
+                    transform.forward * lastInputVector.y +
                     transform.right * lastInputVector.x;
 
-;
+                dashDirection.y = diveDownForce;
                 dashDirection.Normalize();
             }
         }
@@ -322,7 +325,7 @@ public class player : MonoBehaviour
 
                 bounceVelocity = bounceDirection * collisionStrength * bounceIntensity;
                 bounceDirection.y = 0f;
-                enemyPlayer.Damage(bounceVelocity, 2);
+                enemyPlayer.Damage(bounceVelocity, combat.GetCollisionDamage());
                 combat.Damage(2);
                 dashing = false;
             }

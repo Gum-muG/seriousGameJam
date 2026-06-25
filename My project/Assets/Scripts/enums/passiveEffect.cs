@@ -5,5 +5,6 @@ public enum passiveEffect{
      looting, fasterDash, dashLifeSteal, wallStick,
       wallInvincibility, stealth, chanceFullHealth,
       chanceInvincibility, chanceEnemyLootUp,
-      chanceDoubleStageReward, piercingDash, grow
+      chanceDoubleStageReward, piercingDash, grow,
+      cooldownReduction
 }

@@ -1,5 +1,5 @@
 using UnityEngine;
 
 public enum beybladePiece{
-    Face, Tip, Ring, Wheel, Track
+    face, tip, ring, wheel, track
 }
