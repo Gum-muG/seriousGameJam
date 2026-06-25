@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Assemblies;
+using UnityEngine.EventSystems;
 
 public class player : MonoBehaviour
 {
@@ -47,6 +48,7 @@ public class player : MonoBehaviour
     private Vector2 lastInputVector = new Vector2(0, 1);
     private Vector3 startingPosition;
     private Vector3 targetCameraPos;
+    private Vector3 moveDir;
 
 
 //BOOLEANS//
@@ -230,7 +232,7 @@ public class player : MonoBehaviour
 
         currentInputVector = currentInputVector.normalized;
 
-        Vector3 moveDir =
+        moveDir =
             transform.forward * currentInputVector.y +
             transform.right * currentInputVector.x;
 
@@ -329,7 +331,7 @@ public class player : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 
-                Vector3 bounceDirection = hit.normal;
+                Vector3 bounceDirection = Vector3.Reflect(moveDir, hit.normal).normalized;
                 bounceDirection.y = 0f;
                 bounceDirection.Normalize();
 
