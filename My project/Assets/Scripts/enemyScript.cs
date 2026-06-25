@@ -134,7 +134,7 @@ public class enemy : MonoBehaviour
     public void Damage(Vector3 bounceVelocity, int damage)
     {
         this.bounceVelocity = bounceVelocity;
-        health.Health -= damage;
+        health.Damage(damage);
         canvasScript.setHealth(health.Health);
         if (health.Health == 0)
         {

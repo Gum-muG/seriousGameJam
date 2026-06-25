@@ -11,7 +11,7 @@ public class playerStats : MonoBehaviour
 
     public float GetAttackModifier()
     {
-        float modifier = 1f;
+        float modifier = .1f;
 
         if (pieces.face != null)
             modifier += pieces.face.attackModifier;

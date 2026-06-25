@@ -1226,6 +1226,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1592f7e65ef1f384194c5de0495377db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::playerPieces
+  face: {fileID: 0}
+  ring: {fileID: 0}
+  wheel: {fileID: 0}
+  track: {fileID: 0}
+  tip: {fileID: 0}
 --- !u!114 &2928273414369261667
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1453,6 +1458,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1657795781497703729, guid: be4e48b3ad55a5f428096b07217b301c, type: 3}
+      propertyPath: spinSpeed
+      value: 2000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1657795781497703729, guid: be4e48b3ad55a5f428096b07217b301c, type: 3}
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 230583855}
@@ -1496,6 +1505,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3062241759099457887, guid: be4e48b3ad55a5f428096b07217b301c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 312bcb1c9dfe65846980e6c07edcef61, type: 2}
+    - target: {fileID: 3552819274004267030, guid: be4e48b3ad55a5f428096b07217b301c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 312bcb1c9dfe65846980e6c07edcef61, type: 2}
+    - target: {fileID: 4982879933632948104, guid: be4e48b3ad55a5f428096b07217b301c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 312bcb1c9dfe65846980e6c07edcef61, type: 2}
     - target: {fileID: 6094266450963704027, guid: be4e48b3ad55a5f428096b07217b301c, type: 3}
       propertyPath: m_Name
       value: Player

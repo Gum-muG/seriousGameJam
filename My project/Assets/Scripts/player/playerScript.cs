@@ -13,7 +13,6 @@ public class player : MonoBehaviour
     [SerializeField] private float tiltSpeed = 5f;
     [SerializeField] private float tiltAmount= 20f;
     [SerializeField] private float spinSpeed = 360f;
-    public float SpinSpeed => spinSpeed;
 
 
 //REFERENCES//
@@ -207,13 +206,11 @@ public class player : MonoBehaviour
             dashTimer = dashTime;
 
             if (!characterController.isGrounded){
-                float diveDownForce = -1.5f;
-
                 dashDirection =
                     transform.forward * lastInputVector.y +
                     transform.right * lastInputVector.x;
 
-                dashDirection.y = diveDownForce;
+                dashDirection.y = playerCameraOrbit.forward.y;
                 dashDirection.Normalize();
             }
         }

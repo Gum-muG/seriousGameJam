@@ -22,13 +22,13 @@ public class playerCombat : MonoBehaviour
 
     public int GetCollisionDamage()
     {
-        float damage = playerController.SpinSpeed;
+        float damage = GameManager.instance.playerHealth.Health;
 
         float attackMultiplier = stats.GetAttackModifier();
 
         damage *= attackMultiplier;
 
-        return Mathf.RoundToInt(damage / 100f);
+        return Mathf.CeilToInt(damage);
     }
 
     public void Damage(int damageAmount)
