@@ -13,6 +13,7 @@ public class player : MonoBehaviour
     [SerializeField] private float tiltSpeed = 5f;
     [SerializeField] private float tiltAmount= 20f;
     [SerializeField] private float spinSpeed = 360f;
+    public float SpinSpeed => spinSpeed;
 
 
 //REFERENCES//
@@ -23,6 +24,7 @@ public class player : MonoBehaviour
     [SerializeField] private Transform playerCameraTarget;
     [SerializeField] private Transform playerCamera;
     [SerializeField] private MeshCollider collision;
+    
 
     [SerializeField] private float gravity = 10f;
     [SerializeField] private float dashSpeed = 30f;
@@ -72,6 +74,11 @@ public class player : MonoBehaviour
     private int groundLayer;
     private int playerLayer;
 
+
+//SCRIPT REFERENCES//
+    private playerCombat combat;
+
+
 //START
     void Start()
     {
@@ -80,6 +87,9 @@ public class player : MonoBehaviour
         HUD.instance.SetHealth(GameManager.instance.playerHealth.Health);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+    //Getting components
+        combat = GetComponent<playerCombat>();
         
     //Assigning layerVariables
         wallLayer = LayerMask.NameToLayer("Wall");
@@ -176,7 +186,7 @@ public class player : MonoBehaviour
 
 //self-damage
          if (Input.GetKeyDown(KeyCode.H)){
-            Damage(2);
+            combat.Damage(2);
         }
 
 //jump
@@ -197,11 +207,13 @@ public class player : MonoBehaviour
             dashTimer = dashTime;
 
             if (!characterController.isGrounded){
+                float diveDownForce = -1.5f;
+
                 dashDirection =
-                    playerCameraOrbit.forward * lastInputVector.y +
+                    transform.forward * lastInputVector.y +
                     transform.right * lastInputVector.x;
 
-;
+                dashDirection.y = diveDownForce;
                 dashDirection.Normalize();
             }
         }
@@ -315,8 +327,8 @@ public class player : MonoBehaviour
 
                 bounceVelocity = bounceDirection * collisionStrength * bounceIntensity;
                 bounceDirection.y = 0f;
-                enemyPlayer.Damage(bounceVelocity, 2);
-                Damage(2);
+                enemyPlayer.Damage(bounceVelocity, combat.GetCollisionDamage());
+                combat.Damage(2);
                 dashing = false;
             }
             
@@ -336,26 +348,10 @@ public class player : MonoBehaviour
                 bounceDirection.Normalize();
 
                 bounceVelocity = bounceDirection * collisionStrength;
-                Damage(2);
+                combat.Damage(2);
                 dashing = false;
             }
         }
     }
-            
 
-    private void respawnPlayer()
-    {
-        respawnManager.instance.triggerRespawnScreen(startingPosition);
-    }
-
-    private void Damage(int damage) {
-        GameManager.instance.playerHealth.Damage(damage);
-        HUD.instance.SetHealth(GameManager.instance.playerHealth.Health);
-        if (GameManager.instance.playerHealth.Health == 0)
-        {
-            respawnPlayer();
-        } 
-    }
-
-  
 }
