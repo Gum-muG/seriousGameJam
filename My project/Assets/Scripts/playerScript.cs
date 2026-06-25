@@ -198,10 +198,10 @@ public class player : MonoBehaviour
                 float diveDownForce = -1.5f;
 
                 dashDirection =
-                    transform.forward * lastInputVector.y +
+                    playerCameraOrbit.forward * lastInputVector.y +
                     transform.right * lastInputVector.x;
 
-                dashDirection.y = diveDownForce;
+;
                 dashDirection.Normalize();
             }
         }
