@@ -85,7 +85,7 @@ public class spikes : MonoBehaviour
             GameManager.instance.playerHealth.Damage(2);
             HUD.instance.SetHealth(GameManager.instance.playerHealth.Health);
             attackWait = true;
-            Invoke("resetAttack", 0.5f);
+            Invoke("resetAttack", 0.3f);
         }
     }
 
