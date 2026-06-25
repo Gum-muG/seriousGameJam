@@ -204,13 +204,11 @@ public class player : MonoBehaviour
             dashTimer = dashTime;
 
             if (!characterController.isGrounded){
-                float diveDownForce = -1.5f;
-
                 dashDirection =
-                    transform.forward * lastInputVector.y +
+                    playerCameraOrbit.forward * lastInputVector.y +
                     transform.right * lastInputVector.x;
 
-                dashDirection.y = diveDownForce;
+;
                 dashDirection.Normalize();
             }
         }
