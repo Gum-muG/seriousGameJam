@@ -21,7 +21,7 @@ public class levelRewardManager : MonoBehaviour
 
     public void checkLevelCleared()
     {
-        enemy[] enemies = FindObjectsByType<enemy>(FindObjectsSortMode.None);
+        enemy[] enemies = FindObjectsByType<enemy>();
 
         if (enemies.Length - 1 <= 0)
         {
