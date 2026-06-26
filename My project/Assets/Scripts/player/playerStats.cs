@@ -14,19 +14,19 @@ public class playerStats : MonoBehaviour
         float modifier = .1f;
 
         if (pieces.face != null)
-            modifier += pieces.face.attackModifier;
+            modifier += pieces.face.getAttackModifier();
 
         if (pieces.ring != null)
-            modifier += pieces.ring.attackModifier;
+            modifier += pieces.ring.getAttackModifier();
 
         if (pieces.wheel != null)
-            modifier += pieces.wheel.attackModifier;
+            modifier += pieces.wheel.getAttackModifier();
 
         if (pieces.track != null)
-            modifier += pieces.track.attackModifier;
+            modifier += pieces.track.getAttackModifier();
 
         if (pieces.tip != null)
-            modifier += pieces.tip.attackModifier;
+            modifier += pieces.tip.getAttackModifier();
 
         return modifier;
     }
@@ -36,19 +36,19 @@ public class playerStats : MonoBehaviour
         float modifier = 1f;
 
         if (pieces.face != null)
-            modifier += pieces.face.defenseModifier;
+            modifier += pieces.face.getDefenseModifier();
 
         if (pieces.ring != null)
-            modifier += pieces.ring.defenseModifier;
+            modifier += pieces.ring.getDefenseModifier();
 
         if (pieces.wheel != null)
-            modifier += pieces.wheel.defenseModifier;
+            modifier += pieces.wheel.getDefenseModifier();
 
         if (pieces.track != null)
-            modifier += pieces.track.defenseModifier;
+            modifier += pieces.track.getDefenseModifier();
 
         if (pieces.tip != null)
-            modifier += pieces.tip.defenseModifier;
+            modifier += pieces.tip.getDefenseModifier();
 
         return modifier;
     }
@@ -57,11 +57,11 @@ public class playerStats : MonoBehaviour
 {
     float modifier = 1f;
 
-    if (pieces.face != null) modifier += pieces.face.speedModifier;
-    if (pieces.ring != null) modifier += pieces.ring.speedModifier;
-    if (pieces.wheel != null) modifier += pieces.wheel.speedModifier;
-    if (pieces.track != null) modifier += pieces.track.speedModifier;
-    if (pieces.tip != null) modifier += pieces.tip.speedModifier;
+    if (pieces.face != null) modifier += pieces.face.getSpeedModifier();
+    if (pieces.ring != null) modifier += pieces.ring.getSpeedModifier();
+    if (pieces.wheel != null) modifier += pieces.wheel.getSpeedModifier();
+    if (pieces.track != null) modifier += pieces.track.getSpeedModifier();
+    if (pieces.tip != null) modifier += pieces.tip.getSpeedModifier();
 
     return modifier;
 }
@@ -70,11 +70,11 @@ public float getHealthModifier()
 {
     float modifier = 1f;
 
-    if (pieces.face != null) modifier += pieces.face.healthModifier;
-    if (pieces.ring != null) modifier += pieces.ring.healthModifier;
-    if (pieces.wheel != null) modifier += pieces.wheel.healthModifier;
-    if (pieces.track != null) modifier += pieces.track.healthModifier;
-    if (pieces.tip != null) modifier += pieces.tip.healthModifier;
+    if (pieces.face != null) modifier += pieces.face.getHealthModifier();
+    if (pieces.ring != null) modifier += pieces.ring.getHealthModifier();
+    if (pieces.wheel != null) modifier += pieces.wheel.getHealthModifier();
+    if (pieces.track != null) modifier += pieces.track.getHealthModifier();
+    if (pieces.tip != null) modifier += pieces.tip.getHealthModifier();
 
     return modifier;
 }
