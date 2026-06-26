@@ -325,7 +325,7 @@ public class player : MonoBehaviour
                 bounceVelocity = bounceDirection * collisionStrength * bounceIntensity;
                 bounceDirection.y = 0f;
                 enemyPlayer.Damage(bounceVelocity, combat.GetCollisionDamage());
-                combat.Damage(2);
+                combat.Damage(combat.GetCollisionDamage());
                 dashing = false;
             }
             
