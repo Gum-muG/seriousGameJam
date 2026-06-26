@@ -2,30 +2,30 @@ using UnityEngine;
 
 public class playerPieceLoadout : MonoBehaviour
 {
-    public pieceBlueprint face;
-    public pieceBlueprint ring;
-    public pieceBlueprint wheel;
-    public pieceBlueprint track;
-    public pieceBlueprint tip;
+    public ownedPiece face;
+    public ownedPiece ring;
+    public ownedPiece wheel;
+    public ownedPiece track;
+    public ownedPiece tip;
 
     private playerAbilityLoadout abilities;
-
-    private void Start()
-    {
-        updateAbility();
-    }
 
     private void Awake()
     {
         abilities = GetComponent<playerAbilityLoadout>();
     }
 
-    public void equip(pieceBlueprint part)
+    private void Start()
     {
-        if (part == null)
+        updateAbility();
+    }
+
+    public void equip(ownedPiece part)
+    {
+        if (part == null || part.blueprint == null)
             return;
 
-        switch (part.pieceType)
+        switch (part.blueprint.pieceType)
         {
             case beybladePiece.face:
                 face = part;
@@ -43,6 +43,7 @@ public class playerPieceLoadout : MonoBehaviour
                 tip = part;
                 break;
         }
+
         updateAbility();
     }
 
@@ -66,18 +67,15 @@ public class playerPieceLoadout : MonoBehaviour
                 tip = null;
                 break;
         }
+
         updateAbility();
     }
-
 
     private void updateAbility()
     {
         if (abilities == null)
             return;
 
-        if (face != null)
-            abilities.setAbility(face.grantedAbility);
-        else
-            abilities.setAbility(null);
+        abilities.setAbility(face);
     }
 }

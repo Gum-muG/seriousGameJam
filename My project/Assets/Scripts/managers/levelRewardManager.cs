@@ -21,8 +21,7 @@ public class levelRewardManager : MonoBehaviour
 
     public void checkLevelCleared()
     {
-        enemy[] enemies = FindObjectsByType<enemy>();
-        Debug.Log(enemies.Length - 1);
+        enemy[] enemies = FindObjectsByType<enemy>(FindObjectsSortMode.None);
 
         if (enemies.Length - 1 <= 0)
         {
@@ -41,6 +40,10 @@ public class levelRewardManager : MonoBehaviour
 
     public void chooseReward(pieceBlueprint chosenPiece)
     {
-        playerLoadout.equip(chosenPiece);
+        ownedPiece newPiece = new ownedPiece();
+        newPiece.blueprint = chosenPiece;
+        newPiece.level = 1;
+
+        playerLoadout.equip(newPiece);
     }
 }
