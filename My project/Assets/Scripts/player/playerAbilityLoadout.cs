@@ -16,7 +16,7 @@ public class playerAbilityLoadout : MonoBehaviour
     {
         equippedFacePiece = facePiece;
 
-        if (facePiece != null)
+        if (facePiece != null && facePiece.blueprint != null)
             currentAbility = facePiece.getGrantedAbility();
         else
             currentAbility = null;

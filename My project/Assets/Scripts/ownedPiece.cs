@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [System.Serializable]
-public class ownedPiece : MonoBehaviour
+public class ownedPiece
 {
     public pieceBlueprint blueprint;
 
@@ -23,26 +23,41 @@ public class ownedPiece : MonoBehaviour
 
     public float getAttackModifier()
     {
+        if (blueprint == null){
+        return 0f;
+        }
         return blueprint.attackModifier + blueprint.upgradeModifier * (level - 1);
     }
 
     public float getDefenseModifier()
-    {
+    {   
+        if (blueprint == null){
+        return 0f;
+        }
         return blueprint.defenseModifier + blueprint.upgradeModifier * (level - 1);
     }
 
     public float getSpeedModifier()
     {
+        if (blueprint == null){
+        return 0f;
+        }
         return blueprint.speedModifier + blueprint.upgradeModifier * (level - 1);
     }
 
     public float getHealthModifier()
     {
+        if (blueprint == null){
+        return 0f;
+        }
         return blueprint.healthModifier + blueprint.upgradeModifier * (level - 1);
     }
 
     public Ability getGrantedAbility()
-    {
+    {   
+        if (blueprint == null){
+        return null;
+        }
         return blueprint.grantedAbility;
     }
 }
