@@ -66,6 +66,13 @@ public class enemy : MonoBehaviour
     private int enemyLayer;
     private int groundLayer;
     private int playerLayer;
+
+    //WOBBLE//
+    private bool wobbled;
+    private float wobbleTimer;
+    private float wobbleTickSpeed;
+    private int wobbleDamage;
+    private bool wobbleWait;
     
 
 //START
@@ -130,6 +137,41 @@ public class enemy : MonoBehaviour
         if (inSightRange) ChasePlayer(); 
         else playerMoving = false;
         agent.Move(-bounceVelocity/200);
+
+    //Wobble
+        if (wobbled)
+        {
+            wobbleTimer -= Time.deltaTime;
+
+            if (!wobbleWait)
+            {
+                wobbleWait = true;
+                Damage(wobbleDamage);
+                Invoke("resetWobbleWait", 1f);
+            }
+
+            if (wobbleTimer <= 0f)
+            {
+                wobbled = false;
+            }
+        }
+    }
+
+    private void Die()
+        {
+            Destroy(gameObject);
+
+            levelRewardManager.instance.checkLevelCleared();
+        }
+
+    public void Damage(int damage)
+    {
+        health.Damage(damage);
+        canvasScript.setHealth(health.Health);
+        if (health.Health == 0)
+        {
+            Die();
+        }
     }
     public void Damage(Vector3 bounceVelocity, int damage)
     {
@@ -138,12 +180,25 @@ public class enemy : MonoBehaviour
         canvasScript.setHealth(health.Health);
         if (health.Health == 0)
         {
-            Destroy(gameObject);
+            Die();
         }
     }
     private void ChasePlayer()
     {
         agent.SetDestination(player.position);
         playerMoving = true;
+    }
+
+    public void applyWobble(float duration, int damagePerTick)
+    {
+        wobbled = true;
+        wobbleTimer = duration;
+        wobbleTickSpeed = 1f;
+        wobbleDamage = damagePerTick;
+    }
+
+    private void resetWobbleWait()
+    {
+        wobbleWait = false;
     }
 }

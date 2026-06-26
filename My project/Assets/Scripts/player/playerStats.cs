@@ -9,7 +9,7 @@ public class playerStats : MonoBehaviour
         pieces = GetComponent<playerPieceLoadout>();
     }
 
-    public float GetAttackModifier()
+    public float getAttackModifier()
     {
         float modifier = .1f;
 
@@ -31,7 +31,7 @@ public class playerStats : MonoBehaviour
         return modifier;
     }
 
-    public float GetDefenseModifier()
+    public float getDefenseModifier()
     {
         float modifier = 1f;
 
@@ -52,4 +52,30 @@ public class playerStats : MonoBehaviour
 
         return modifier;
     }
+
+    public float getSpeedModifier()
+{
+    float modifier = 1f;
+
+    if (pieces.face != null) modifier += pieces.face.speedModifier;
+    if (pieces.ring != null) modifier += pieces.ring.speedModifier;
+    if (pieces.wheel != null) modifier += pieces.wheel.speedModifier;
+    if (pieces.track != null) modifier += pieces.track.speedModifier;
+    if (pieces.tip != null) modifier += pieces.tip.speedModifier;
+
+    return modifier;
+}
+
+public float getHealthModifier()
+{
+    float modifier = 1f;
+
+    if (pieces.face != null) modifier += pieces.face.healthModifier;
+    if (pieces.ring != null) modifier += pieces.ring.healthModifier;
+    if (pieces.wheel != null) modifier += pieces.wheel.healthModifier;
+    if (pieces.track != null) modifier += pieces.track.healthModifier;
+    if (pieces.tip != null) modifier += pieces.tip.healthModifier;
+
+    return modifier;
+}
 }

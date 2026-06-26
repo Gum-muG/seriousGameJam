@@ -24,7 +24,7 @@ public class playerCombat : MonoBehaviour
     {
         float damage = GameManager.instance.playerHealth.Health;
 
-        float attackMultiplier = stats.GetAttackModifier();
+        float attackMultiplier = stats.getAttackModifier();
 
         damage *= attackMultiplier;
 
