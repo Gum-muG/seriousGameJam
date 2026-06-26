@@ -5,6 +5,7 @@ public class playerAbilityLoadout : MonoBehaviour
     public Ability currentAbility;
 
     private float cooldownTimer;
+    private float maxCooldown;
     private ownedPiece equippedFacePiece;
 
     private void Update()
@@ -20,8 +21,6 @@ public class playerAbilityLoadout : MonoBehaviour
             currentAbility = facePiece.getGrantedAbility();
         else
             currentAbility = null;
-
-        cooldownTimer = 0f;
     }
 
     public bool canUseAbility()
@@ -40,27 +39,12 @@ public class playerAbilityLoadout : MonoBehaviour
             abilityLevel = equippedFacePiece.level;
 
         currentAbility.useAbility(gameObject, abilityLevel);
-        
-        feedbackManager.instance.ShowAbilityUsed(currentAbility.abilityName);
 
-        cooldownTimer = currentAbility.abilityCooldown;
-    }
+        if (feedbackManager.instance != null)
+            feedbackManager.instance.ShowAbilityUsed(currentAbility.abilityName);
 
-    public void useAbility(GameObject target)
-    {
-        if (!canUseAbility())
-            return;
-
-        int abilityLevel = 1;
-
-        if (equippedFacePiece != null)
-            abilityLevel = equippedFacePiece.level;
-
-        currentAbility.useAbility(gameObject, target, abilityLevel);
-
-        feedbackManager.instance.ShowAbilityUsed(currentAbility.abilityName);
-
-        cooldownTimer = currentAbility.abilityCooldown;
+        maxCooldown = currentAbility.abilityCooldown;
+        cooldownTimer = maxCooldown;
     }
 
     public float getCooldownRemaining()
@@ -70,9 +54,9 @@ public class playerAbilityLoadout : MonoBehaviour
 
     public float getCooldownProgress()
     {
-        if (currentAbility == null || currentAbility.abilityCooldown <= 0f)
+        if (maxCooldown <= 0f)
             return 1f;
 
-        return 1f - (cooldownTimer / currentAbility.abilityCooldown);
+        return 1f - (cooldownTimer / maxCooldown);
     }
 }

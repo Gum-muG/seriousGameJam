@@ -81,6 +81,7 @@ public class player : MonoBehaviour
 //SCRIPT REFERENCES//
     private playerCombat combat;
     private playerAbilityLoadout abilities;
+    private playerPieceLoadout pieceLoadout;
 
 
 //START
@@ -95,6 +96,7 @@ public class player : MonoBehaviour
     //Getting components
         combat = GetComponent<playerCombat>();
         abilities = GetComponent<playerAbilityLoadout>();
+        pieceLoadout = GetComponent<playerPieceLoadout>();
         
     //Assigning layerVariables
         wallLayer = LayerMask.NameToLayer("Wall");
@@ -191,11 +193,27 @@ public class player : MonoBehaviour
             playerMoving = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+//use ability
+        if (Input.GetKeyDown(KeyCode.E))
         {
             abilities.useAbility();
         }
 
+//swap ability
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            pieceLoadout.equipFaceFromInventory(0);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            pieceLoadout.equipFaceFromInventory(1);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            pieceLoadout.equipFaceFromInventory(2);
+        }
 
 //self-damage
          if (Input.GetKeyDown(KeyCode.H)){

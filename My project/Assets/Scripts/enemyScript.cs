@@ -1,29 +1,17 @@
-using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Assemblies;
 
 public class enemy : MonoBehaviour
 {
-
     public NavMeshAgent agent;
-
-
-    bool alreadyAttacked;
 
     public float sightRange, attackRange;
     public bool inSightRange, inAttackRange;
 
-
-//PLAYER STATS//
-    [SerializeField] private float moveSpeed = 10f;
     [SerializeField] private float tiltSpeed = 5f;
-    [SerializeField] private float tiltAmount= 20f;
     [SerializeField] public float spinSpeed = 360f;
 
-
-//REFERENCES//
     [SerializeField] private Transform beyblade_mesh;
     [SerializeField] private Transform spin_empty;
     [SerializeField] private Transform player;
@@ -33,166 +21,237 @@ public class enemy : MonoBehaviour
     [SerializeField] private EnemyHealth canvasScript;
 
     [SerializeField] private float gravity = 10f;
-    [SerializeField] private float dashSpeed = 30f;
-    [SerializeField] private float dashTime = 0.1f;
-    [SerializeField] private float jumpForce = 3f;
     [SerializeField] private float bounceDecay = 5f;
 
-
-//VECTORS//
     private Vector3 tiltVector;
     private Vector3 targetTilt;
-    private Vector3 dashDirection;
-    private Vector2 lastInputVector = new Vector2(0, 0);
     public Vector3 currentPlayerVelocity;
     private Vector3 bounceVelocity;
 
-
-//BOOLEANS//
     private bool playerMoving = false;
-    private bool grounded = true;
-    private bool dashing = false;
 
-
-//VARIABLES//
     private float spinY = 0;
     private float verticalVelocity = 0f;
-    private float dashTimer = 0f;
 
     private HealthComponent health = new HealthComponent(10, 10);
 
-    //LAYERS//
     private int wallLayer;
     private int enemyLayer;
     private int groundLayer;
     private int playerLayer;
 
-    //WOBBLE//
     private bool wobbled;
     private float wobbleTimer;
-    private float wobbleTickSpeed;
     private int wobbleDamage;
     private bool wobbleWait;
-    
 
-//START
-    void Start()
+    private void Start()
     {
-        tiltVector = new Vector3(spin_empty.localEulerAngles.x, spin_empty.localEulerAngles.y, spin_empty.localEulerAngles.z);
-        HUD.instance.SetHealth(GameManager.instance.playerHealth.Health);
-        //Assigning layerVariables
+        findPlayer();
+        findPlayerCamera();
+
+        tiltVector = new Vector3(
+            spin_empty.localEulerAngles.x,
+            spin_empty.localEulerAngles.y,
+            spin_empty.localEulerAngles.z
+        );
+
+        if (HUD.instance != null && GameManager.instance != null)
+        {
+            HUD.instance.SetHealth(GameManager.instance.playerHealth.Health);
+        }
+
         wallLayer = LayerMask.NameToLayer("Wall");
         enemyLayer = LayerMask.NameToLayer("Enemy");
         groundLayer = LayerMask.NameToLayer("Ground");
         playerLayer = LayerMask.NameToLayer("Player");
+
+        if (canvasScript != null)
+        {
+            canvasScript.setHealth(health.Health);
+        }
     }
 
-
-//UPDATE
-    private void Update(){
-    //Variables
+    private void Update()
+    {
         Vector2 currentInputVector = agent.velocity.normalized;
-        Vector3 currentTilt = new Vector3(spin_empty.localEulerAngles.x, spin_empty.localEulerAngles.y, spin_empty.localEulerAngles.z);
+        Vector3 currentTilt = new Vector3(
+            spin_empty.localEulerAngles.x,
+            spin_empty.localEulerAngles.y,
+            spin_empty.localEulerAngles.z
+        );
+
         spinY += spinSpeed * Time.deltaTime;
 
-    //Tilt SLERP
-        if (agent.velocity.magnitude > 0){
-            targetTilt = new Vector3(tiltVector.x + currentInputVector.magnitude * 20f, tiltVector.y, tiltVector.z);
-
-            currentTilt.x = Mathf.LerpAngle(currentTilt.x, targetTilt.x, Time.deltaTime * tiltSpeed);
-            currentTilt.z = Mathf.LerpAngle(currentTilt.z, targetTilt.z, Time.deltaTime * tiltSpeed);
-
-            spin_empty.localEulerAngles = currentTilt;
+        if (agent.velocity.magnitude > 0)
+        {
+            targetTilt = new Vector3(
+                tiltVector.x + currentInputVector.magnitude * 20f,
+                tiltVector.y,
+                tiltVector.z
+            );
         }
-        else {
+        else
+        {
             targetTilt = new Vector3(tiltVector.x, tiltVector.y, tiltVector.z);
-
-            currentTilt.x = Mathf.LerpAngle(currentTilt.x, targetTilt.x, Time.deltaTime * tiltSpeed);
-            currentTilt.z = Mathf.LerpAngle(currentTilt.z, targetTilt.z, Time.deltaTime * tiltSpeed);
-
-            spin_empty.localEulerAngles = currentTilt;
         }
 
-        if (spinY >= 360f){
+        currentTilt.x = Mathf.LerpAngle(currentTilt.x, targetTilt.x, Time.deltaTime * tiltSpeed);
+        currentTilt.z = Mathf.LerpAngle(currentTilt.z, targetTilt.z, Time.deltaTime * tiltSpeed);
+        spin_empty.localEulerAngles = currentTilt;
+
+        if (spinY >= 360f)
+        {
             spinY -= 360f;
         }
 
         verticalVelocity -= gravity * Time.deltaTime;
 
-        canvas.LookAt(playerCamera);
-        canvas.Rotate(new Vector3(0, 180, 0));
+        updateHealthCanvas();
 
         spinSpeed = health.Health * 200;
+
         if (health.Health > 0)
         {
-            beyblade_mesh.localEulerAngles = new Vector3(40/math.pow(health.Health, 1.5f), spinY, beyblade_mesh.localEulerAngles.z);
+            beyblade_mesh.localEulerAngles = new Vector3(
+                40 / Mathf.Pow(health.Health, 1.5f),
+                spinY,
+                beyblade_mesh.localEulerAngles.z
+            );
         }
 
         bounceVelocity = Vector3.Lerp(bounceVelocity, Vector3.zero, Time.deltaTime * bounceDecay);
 
-        inSightRange = Physics.CheckSphere(transform.position, sightRange, 1<<playerLayer);
+        inSightRange = Physics.CheckSphere(transform.position, sightRange, 1 << playerLayer);
 
-        if (inSightRange) ChasePlayer(); 
-        else playerMoving = false;
-        agent.Move(-bounceVelocity/200);
-
-
-    //Wobble
-        if (wobbled)
+        if (inSightRange)
         {
-            wobbleTimer -= Time.deltaTime;
+            ChasePlayer();
+        }
+        else
+        {
+            playerMoving = false;
+        }
 
-            if (!wobbleWait)
-            {
-                wobbleWait = true;
-                Damage(wobbleDamage);
-                Invoke("resetWobbleWait", 1f);
-            }
+        agent.Move(-bounceVelocity / 200);
 
-            if (wobbleTimer <= 0f)
-            {
-                wobbled = false;
-            }
+        handleWobble();
+    }
+
+    private void findPlayer()
+    {
+        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+
+        if (playerObject != null)
+        {
+            player = playerObject.transform;
+        }
+    }
+
+    private void findPlayerCamera()
+    {
+        Camera cam = Camera.main;
+
+        if (cam != null)
+        {
+            playerCamera = cam.transform;
+        }
+    }
+
+    private void updateHealthCanvas()
+    {
+        if (playerCamera == null)
+        {
+            findPlayerCamera();
+        }
+
+        if (playerCamera == null || canvas == null)
+            return;
+
+        canvas.LookAt(playerCamera.position);
+        canvas.Rotate(0, 180, 0);
+    }
+
+    private void ChasePlayer()
+    {
+        if (player == null)
+        {
+            findPlayer();
+        }
+
+        if (player == null)
+            return;
+
+        agent.SetDestination(player.position);
+        playerMoving = true;
+    }
+
+    private void handleWobble()
+    {
+        if (!wobbled)
+            return;
+
+        wobbleTimer -= Time.deltaTime;
+
+        if (!wobbleWait)
+        {
+            wobbleWait = true;
+            Damage(wobbleDamage);
+            Invoke("resetWobbleWait", 1f);
+        }
+
+        if (wobbleTimer <= 0f)
+        {
+            wobbled = false;
         }
     }
 
     private void Die()
-        {
-            Destroy(gameObject);
+    {
+        Destroy(gameObject);
 
+        if (levelRewardManager.instance != null)
+        {
             levelRewardManager.instance.checkLevelCleared();
         }
+    }
 
     public void Damage(int damage)
     {
         health.Damage(damage);
-        canvasScript.setHealth(health.Health);
-        if (health.Health == 0)
+
+        if (canvasScript != null)
+        {
+            canvasScript.setHealth(health.Health);
+        }
+
+        if (health.Health <= 0)
         {
             Die();
         }
     }
+
     public void Damage(Vector3 bounceVelocity, int damage)
     {
         this.bounceVelocity = bounceVelocity;
+
         health.Damage(damage);
-        canvasScript.setHealth(health.Health);
-        if (health.Health == 0)
+
+        if (canvasScript != null)
+        {
+            canvasScript.setHealth(health.Health);
+        }
+
+        if (health.Health <= 0)
         {
             Die();
         }
-    }
-    private void ChasePlayer()
-    {
-        agent.SetDestination(player.position);
-        playerMoving = true;
     }
 
     public void applyWobble(float duration, int damagePerTick)
     {
         wobbled = true;
         wobbleTimer = duration;
-        wobbleTickSpeed = 1f;
         wobbleDamage = damagePerTick;
     }
 

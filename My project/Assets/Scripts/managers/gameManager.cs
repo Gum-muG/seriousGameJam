@@ -2,26 +2,29 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance {get; private set;}
+    public static GameManager instance { get; private set; }
 
     public HealthComponent playerHealth = new HealthComponent(20, 20);
 
-    [SerializeField] AudioClip music;
+    [SerializeField] private AudioClip music;
 
-    void Awake()
+    private void Awake()
     {
         if (instance != null && instance != this)
         {
-            Destroy(this);
+            Destroy(gameObject);
+            return;
         }
-        else
-        {
-            instance = this;
-        }
+
+        instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
-    void Start()
+    private void Start()
     {
-        soundManager.instance.playSound(music, transform, .05f, true);
+        if (soundManager.instance != null)
+        {
+            soundManager.instance.playSound(music, transform, 0.05f, true);
+        }
     }
 }

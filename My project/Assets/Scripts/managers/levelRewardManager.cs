@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class levelRewardManager : MonoBehaviour
 {
@@ -21,9 +22,9 @@ public class levelRewardManager : MonoBehaviour
 
     public void checkLevelCleared()
     {
-        enemy[] enemies = FindObjectsByType<enemy>();
+        enemy[] enemies = FindObjectsByType<enemy>(FindObjectsSortMode.None);
 
-        if (enemies.Length - 1 <= 0)
+        if (enemies.Length <= 1)
         {
             showRewards();
         }
@@ -40,10 +41,24 @@ public class levelRewardManager : MonoBehaviour
 
     public void chooseReward(pieceBlueprint chosenPiece)
     {
-        ownedPiece newPiece = new ownedPiece();
-        newPiece.blueprint = chosenPiece;
-        newPiece.level = 1;
+        if (chosenPiece == null)
+            return;
 
-        playerLoadout.equip(newPiece);
+        if (chosenPiece.pieceType != beybladePiece.face)
+            return;
+
+        if (playerLoadout.addOrUpgradeFacePiece(chosenPiece) == false)
+        {
+            Debug.Log("Face inventory full. Open replacement UI here.");
+            return;
+        }
+
+        reloadCurrentScene();
+    }
+
+    private void reloadCurrentScene()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
