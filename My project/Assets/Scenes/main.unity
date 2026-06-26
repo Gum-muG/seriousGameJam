@@ -1298,7 +1298,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1592f7e65ef1f384194c5de0495377db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::playerPieces
-  face: {fileID: 0}
+  face: {fileID: 11400000, guid: 8dd17bba65ae9004e927a231bd4285a1, type: 2}
   ring: {fileID: 0}
   wheel: {fileID: 0}
   track: {fileID: 0}
@@ -1315,6 +1315,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c5c63e3dd8a00941a1a83a2e2456c5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::playerAbilities
+  currentAbility: {fileID: 0}
 --- !u!1001 &4273728992672966890
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Beyblade Part", menuName = "Equipment/Bey Part")]
+[CreateAssetMenu(fileName = "beybladePart", menuName = "Beyblade Parts")]
 public class pieceBlueprint : ScriptableObject
 {
     public string partName;
@@ -9,7 +9,11 @@ public class pieceBlueprint : ScriptableObject
 
     public float attackModifier;
     public float defenseModifier;
-    public float staminaModifier;
+    public float speedModifier;
+    public float healthModifier;
+    public Ability grantedAbility;
+    public float upgradeModifier;
+    
 
     public passiveEffect passiveEffect;
     public float passiveValue;

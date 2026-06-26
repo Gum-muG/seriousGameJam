@@ -23,7 +23,7 @@ public class player : MonoBehaviour
     [SerializeField] private Transform playerCameraTarget;
     [SerializeField] private Transform playerCamera;
     [SerializeField] private MeshCollider collision;
-    
+
 
     [SerializeField] private float gravity = 10f;
     [SerializeField] private float dashSpeed = 30f;
@@ -76,6 +76,7 @@ public class player : MonoBehaviour
 
 //SCRIPT REFERENCES//
     private playerCombat combat;
+    private playerAbilityLoadout abilities;
 
 
 //START
@@ -89,6 +90,7 @@ public class player : MonoBehaviour
 
     //Getting components
         combat = GetComponent<playerCombat>();
+        abilities = GetComponent<playerAbilityLoadout>();
         
     //Assigning layerVariables
         wallLayer = LayerMask.NameToLayer("Wall");
@@ -180,6 +182,11 @@ public class player : MonoBehaviour
             lastInputVector.y = -1;
             lastInputVector.x = 1;
             playerMoving = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            abilities.useAbility();
         }
 
 
