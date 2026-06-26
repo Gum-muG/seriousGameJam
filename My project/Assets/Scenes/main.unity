@@ -2565,11 +2565,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1592f7e65ef1f384194c5de0495377db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::playerPieces
-  face: {fileID: 11400000, guid: 8dd17bba65ae9004e927a231bd4285a1, type: 2}
-  ring: {fileID: 11400000, guid: 8dd17bba65ae9004e927a231bd4285a1, type: 2}
-  wheel: {fileID: 11400000, guid: 8dd17bba65ae9004e927a231bd4285a1, type: 2}
-  track: {fileID: 11400000, guid: 8dd17bba65ae9004e927a231bd4285a1, type: 2}
-  tip: {fileID: 11400000, guid: 8dd17bba65ae9004e927a231bd4285a1, type: 2}
+  face: {fileID: 0}
+  ring: {fileID: 0}
+  wheel: {fileID: 0}
+  track: {fileID: 0}
+  tip: {fileID: 0}
 --- !u!114 &2928273414369261667
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2583,6 +2583,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::playerAbilities
   currentAbility: {fileID: 0}
+--- !u!114 &2928273414369261671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1464925609650710631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fb19a234b316eb4a94a7789a069a4ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ownedPiece
+  blueprint: {fileID: 0}
+  level: 1
+  maxLevel: 5
 --- !u!1001 &4273728992672966890
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2954,6 +2969,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6094266450963704027, guid: be4e48b3ad55a5f428096b07217b301c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2928273414369261666}
+    - targetCorrespondingSourceObject: {fileID: 6094266450963704027, guid: be4e48b3ad55a5f428096b07217b301c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2928273414369261671}
     - targetCorrespondingSourceObject: {fileID: 6094266450963704027, guid: be4e48b3ad55a5f428096b07217b301c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2928273414369261665}

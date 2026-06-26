@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [System.Serializable]
-public class ownedPiece
+public class ownedPiece : MonoBehaviour
 {
     public pieceBlueprint blueprint;
 
