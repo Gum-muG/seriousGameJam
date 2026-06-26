@@ -40,6 +40,8 @@ public class playerAbilityLoadout : MonoBehaviour
             abilityLevel = equippedFacePiece.level;
 
         currentAbility.useAbility(gameObject, abilityLevel);
+        
+        feedbackManager.instance.ShowAbilityUsed(currentAbility.abilityName);
 
         cooldownTimer = currentAbility.abilityCooldown;
     }
@@ -55,6 +57,8 @@ public class playerAbilityLoadout : MonoBehaviour
             abilityLevel = equippedFacePiece.level;
 
         currentAbility.useAbility(gameObject, target, abilityLevel);
+
+        feedbackManager.instance.ShowAbilityUsed(currentAbility.abilityName);
 
         cooldownTimer = currentAbility.abilityCooldown;
     }

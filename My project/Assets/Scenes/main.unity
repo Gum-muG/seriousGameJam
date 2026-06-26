@@ -1933,7 +1933,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 249c9ab1f6faac64fa89c3fc6235167a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::rewardUI
-  rewardCanvas: {fileID: 1549841797}
+  rewardPanel: {fileID: 1549841797}
   option1Button: {fileID: 580152162}
   option2Button: {fileID: 136725503}
   option3Button: {fileID: 553275411}

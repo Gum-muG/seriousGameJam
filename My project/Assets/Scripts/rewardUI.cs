@@ -4,7 +4,7 @@ using TMPro;
 
 public class rewardUI : MonoBehaviour
 {
-    public GameObject rewardCanvas;
+    public GameObject rewardPanel;
 
     public Button option1Button;
     public Button option2Button;
@@ -24,13 +24,15 @@ public class rewardUI : MonoBehaviour
         reward2 = option2;
         reward3 = option3;
 
-        Debug.Log("show is running");
-
         option1Text.text = reward1.partName;
         option2Text.text = reward2.partName;
         option3Text.text = reward3.partName;
 
-        rewardCanvas.SetActive(true);
+        rewardPanel.SetActive(true);
+
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        Time.timeScale = 0f;
 
         option1Button.onClick.RemoveAllListeners();
         option2Button.onClick.RemoveAllListeners();
@@ -44,6 +46,11 @@ public class rewardUI : MonoBehaviour
     private void Choose(pieceBlueprint chosenPiece)
     {
         levelRewardManager.instance.chooseReward(chosenPiece);
-        rewardCanvas.SetActive(false);
+
+        rewardPanel.SetActive(false);
+
+        Time.timeScale = 1f;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 }
