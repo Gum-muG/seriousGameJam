@@ -16,5 +16,7 @@ public abstract class Ability : ScriptableObject
     public virtual void applyBuff(GameObject user) { }
 
     public virtual void applyDebuff(GameObject user, GameObject target) { }
+    public virtual void useAbility(GameObject user, int abilityLevel) { }
+    public virtual void useAbility(GameObject user, GameObject target, int abilityLevel) { }
 
 }
