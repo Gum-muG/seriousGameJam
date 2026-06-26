@@ -129,7 +129,6 @@ public class enemy : MonoBehaviour
         }
 
         bounceVelocity = Vector3.Lerp(bounceVelocity, Vector3.zero, Time.deltaTime * bounceDecay);
-        Debug.Log(bounceVelocity);
 
         inSightRange = Physics.CheckSphere(transform.position, sightRange, 1<<playerLayer);
 

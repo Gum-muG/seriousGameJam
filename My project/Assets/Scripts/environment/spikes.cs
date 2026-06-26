@@ -44,23 +44,23 @@ public class spikes : MonoBehaviour
         if (densityX > 1)
         {
             gapX = transform.localScale.x / (densityX - 1);
-            startX = transform.position.x - transform.localScale.x/2;
+            startX = transform.localPosition.x - transform.localScale.x/2;
         } else
         {
             gapX = 1;
-            startX = transform.position.x;
+            startX = transform.localPosition.x;
         }
         if (densityZ > 1)
         {
             gapZ = transform.localScale.z / (densityZ - 1);
-            startZ = transform.position.z - transform.localScale.z/2;
+            startZ = transform.localPosition.z - transform.localScale.z/2;
         } else
         {
             gapZ = 1;
-            startZ = transform.position.z;
+            startZ = transform.localPosition.z;
         }
         height = transform.localScale.y;
-        startY = transform.position.y - transform.localScale.y/2;
+        startY = transform.localPosition.y - transform.localScale.y/2;
 
         
 

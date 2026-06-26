@@ -42,6 +42,13 @@ public class playerCombat : MonoBehaviour
         }
     }
 
+    public void Kill()
+    {
+        GameManager.instance.playerHealth.Health = 0;
+        HUD.instance.SetHealth(GameManager.instance.playerHealth.Health);
+        RespawnPlayer();
+    }
+
     public void Heal(int healAmount)
     {
         GameManager.instance.playerHealth.Heal(healAmount);
