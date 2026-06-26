@@ -82,8 +82,8 @@ public class spikes : MonoBehaviour
     {
         if(!attackWait && other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            player thePlayer = other.gameObject.GetComponentInParent<player>();
-            playerCombat combat = thePlayer.GetComponent<playerCombat>();
+            player playerRef = other.gameObject.GetComponentInParent<player>();
+            playerCombat combat = playerRef.GetComponent<playerCombat>();
             combat.Damage(2);
             attackWait = true;
             Invoke("resetAttack", 0.3f);

@@ -39,6 +39,10 @@ public class player : MonoBehaviour
     [SerializeField] private float bounceIntensity = .5f;
     [SerializeField] private float bounceHeight = 2f;
 
+    [SerializeField] private AudioClip[] clashSFX;
+    [SerializeField] private AudioClip spinSFX;
+    [SerializeField] private AudioClip[] dashSFX;
+    [SerializeField] private AudioClip[] jumpSFX;
 
 //VECTORS//
     private Vector3 tiltVector;
@@ -98,6 +102,9 @@ public class player : MonoBehaviour
 
     //Setting bools
         playerAlive = true;
+
+    // Creating Sounds
+        soundManager.instance.playSound(spinSFX, transform, .1f, true);
     }
 
 
@@ -191,6 +198,7 @@ public class player : MonoBehaviour
 //jump
         if (Input.GetKeyDown(KeyCode.Space) && characterController.isGrounded){
             verticalVelocity = jumpForce;
+            soundManager.instance.playSound(jumpSFX[UnityEngine.Random.Range(0,jumpSFX.Length)], transform, 1, false);
         }
 
 //dash and dive
@@ -198,6 +206,7 @@ public class player : MonoBehaviour
             dashDirection =
                 transform.forward * lastInputVector.y +
                 transform.right * lastInputVector.x;
+            soundManager.instance.playSound(dashSFX[UnityEngine.Random.Range(0,dashSFX.Length)], transform, 1, false);
 
             dashDirection.y = 0f;
             dashDirection.Normalize();
@@ -326,6 +335,7 @@ public class player : MonoBehaviour
                 bounceDirection.y = 0f;
                 enemyPlayer.Damage(bounceVelocity, combat.GetCollisionDamage());
                 combat.Damage(combat.GetCollisionDamage());
+                soundManager.instance.playSound(clashSFX[UnityEngine.Random.Range(0,clashSFX.Length)], transform, 1, false);
                 dashing = false;
             }
             
@@ -346,6 +356,7 @@ public class player : MonoBehaviour
 
                 bounceVelocity = bounceDirection * collisionStrength;
                 combat.Damage(2);
+                soundManager.instance.playSound(clashSFX[UnityEngine.Random.Range(0,clashSFX.Length)], transform, 1, false);
                 dashing = false;
             }
         }

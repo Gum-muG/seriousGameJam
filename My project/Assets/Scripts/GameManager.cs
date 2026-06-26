@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 
     public HealthComponent playerHealth = new HealthComponent(20, 20);
 
+    [SerializeField] AudioClip music;
+
     void Awake()
     {
         if (instance != null && instance != this)
@@ -16,5 +18,10 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
         }
+    }
+
+    void Start()
+    {
+        soundManager.instance.playSound(music, transform, .05f, true);
     }
 }

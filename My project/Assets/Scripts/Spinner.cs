@@ -3,6 +3,7 @@ using UnityEngine;
 public class Spinner : MonoBehaviour
 {
     private int playerLayer;
+    [SerializeField] AudioClip sfx;
 
     void Start()
     {
@@ -12,8 +13,10 @@ public class Spinner : MonoBehaviour
     {
         if (other.gameObject.layer == playerLayer)
         {
-            GameManager.instance.playerHealth.Heal(10);
-            HUD.instance.SetHealth(GameManager.instance.playerHealth.Health);
+            player playerRef = other.gameObject.GetComponentInParent<player>();
+            playerCombat combat = playerRef.GetComponent<playerCombat>();
+            combat.Heal(10);
+            soundManager.instance.playSound(sfx, transform, .5f, false);
             Destroy(gameObject);
         }
     }
