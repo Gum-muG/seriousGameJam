@@ -157,13 +157,20 @@ public class enemy : MonoBehaviour
         }
     }
 
+    private void Die()
+        {
+            Destroy(gameObject);
+
+            levelRewardManager.instance.checkLevelCleared();
+        }
+
     public void Damage(int damage)
     {
         health.Damage(damage);
         canvasScript.setHealth(health.Health);
         if (health.Health == 0)
         {
-            Destroy(gameObject);
+            Die();
         }
     }
     public void Damage(Vector3 bounceVelocity, int damage)
@@ -173,7 +180,7 @@ public class enemy : MonoBehaviour
         canvasScript.setHealth(health.Health);
         if (health.Health == 0)
         {
-            Destroy(gameObject);
+            Die();
         }
     }
     private void ChasePlayer()
