@@ -129,14 +129,14 @@ public class enemy : MonoBehaviour
         }
 
         bounceVelocity = Vector3.Lerp(bounceVelocity, Vector3.zero, Time.deltaTime * bounceDecay);
-        
+        Debug.Log(bounceVelocity);
 
         inSightRange = Physics.CheckSphere(transform.position, sightRange, 1<<playerLayer);
-        inAttackRange = Physics.CheckSphere(transform.position, attackRange, 1<<playerLayer);
 
         if (inSightRange) ChasePlayer(); 
         else playerMoving = false;
         agent.Move(-bounceVelocity/200);
+
 
     //Wobble
         if (wobbled)
