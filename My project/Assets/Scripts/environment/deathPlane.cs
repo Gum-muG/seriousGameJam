@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class lava : MonoBehaviour
+public class deathPlane : MonoBehaviour
 {
     void OnTriggerEnter(Collider other)
     {
