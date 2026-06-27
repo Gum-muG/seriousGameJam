@@ -4,6 +4,8 @@ public class Spinner : MonoBehaviour
 {
     private int playerLayer;
     [SerializeField] AudioClip sfx;
+    [SerializeField] AudioClip healAmt;
+    [SerializeField] AudioClip color;
 
     void Start()
     {

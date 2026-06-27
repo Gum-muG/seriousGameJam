@@ -23,9 +23,14 @@ public class soundManager : MonoBehaviour
         AudioSource audioSource = Instantiate(soundObject, spawn.position, Quaternion.identity);
 
         audioSource.clip = audioClip;
+
         audioSource.volume = volume;
+
         audioSource.loop = loop;
+
         audioSource.Play();
+
+        float clipLength = audioSource.clip.length;
 
         if (loop)
         {
