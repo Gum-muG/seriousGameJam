@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -85,4 +86,16 @@ public class levelRewardManager : MonoBehaviour
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+    private void loadRandomScene()
+    {
+        Time.timeScale = 1f;
+
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.advanceLevel();
+        }
+
+        SceneManager.LoadScene("New Scene 1");
+    }
 }
+

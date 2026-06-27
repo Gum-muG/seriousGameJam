@@ -26,6 +26,6 @@ public class currencyHUD : MonoBehaviour
         if (currency == null || getCurrency == null)
             return;
 
-        getCurrency.text = "Coins: " + currency.coins;
+        getCurrency.text = "Scrap: " + currency.coins;
     }
 }

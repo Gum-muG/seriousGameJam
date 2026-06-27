@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
     {
         if (soundManager.instance != null)
         {
-            soundManager.instance.playSound(music, transform, 0.05f, true);
+            soundManager.instance.playSound(music, transform, 0.2f, true);
         }
     }
 }
