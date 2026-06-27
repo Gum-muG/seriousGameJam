@@ -10,6 +10,8 @@ public class levelRewardManager : MonoBehaviour
 
     private playerPieceLoadout playerLoadout;
 
+    private int enemiesAlive;
+
     private void Awake()
     {
         instance = this;
@@ -20,13 +22,18 @@ public class levelRewardManager : MonoBehaviour
         playerLoadout = FindAnyObjectByType<playerPieceLoadout>();
     }
 
-    public void checkLevelCleared()
+    public void registerEnemy()
     {
-        enemy[] enemies = FindObjectsByType<enemy>(FindObjectsSortMode.None);
+        enemiesAlive++;
+    }
 
-        if (enemies.Length <= 1)
+    public void enemyDied()
+    {
+        enemiesAlive--;
+
+        if (enemiesAlive <= 0)
         {
-            showRewards();
+        showRewards();
         }
     }
 
@@ -47,6 +54,17 @@ public class levelRewardManager : MonoBehaviour
         if (chosenPiece.pieceType != beybladePiece.face)
             return;
 
+        if (playerLoadout == null)
+        {
+            playerLoadout = FindAnyObjectByType<playerPieceLoadout>();
+        }
+
+        if (playerLoadout == null)
+        {
+            Debug.LogError("No playerPieceLoadout found.");
+            return;
+        }
+
         if (playerLoadout.addOrUpgradeFacePiece(chosenPiece) == false)
         {
             Debug.Log("Face inventory full. Open replacement UI here.");
@@ -59,6 +77,12 @@ public class levelRewardManager : MonoBehaviour
     private void reloadCurrentScene()
     {
         Time.timeScale = 1f;
+
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.advanceLevel();
+        }
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

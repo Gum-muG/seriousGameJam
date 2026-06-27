@@ -358,8 +358,8 @@ public class player : MonoBehaviour
 
                 bounceVelocity = bounceDirection * collisionStrength * bounceIntensity;
                 bounceDirection.y = 0f;
-                enemyPlayer.Damage(bounceVelocity, combat.GetCollisionDamage());
-                combat.Damage(combat.GetCollisionDamage());
+                enemyPlayer.Damage(bounceVelocity, combat.getOutgoingCollisionDamage());
+                combat.Damage(combat.getIncomingCollisionDamage());
                 soundManager.instance.playSound(clashSFX[UnityEngine.Random.Range(0,clashSFX.Length)], transform, 1, false);
                 dashing = false;
             }

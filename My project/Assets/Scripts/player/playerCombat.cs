@@ -20,13 +20,20 @@ public class playerCombat : MonoBehaviour
         HUD.instance.SetHealth(GameManager.instance.playerHealth.Health);
     }
 
-    public int GetCollisionDamage()
+    public int getOutgoingCollisionDamage()
     {
         float damage = GameManager.instance.playerHealth.Health;
 
-        float attackMultiplier = stats.getAttackModifier();
+        damage *= stats.getAttackModifier();
 
-        damage *= attackMultiplier;
+        return Mathf.CeilToInt(damage);
+    }
+
+    public int getIncomingCollisionDamage()
+    {
+        float damage = 2f;
+
+        damage /= stats.getDefenseModifier();
 
         return Mathf.CeilToInt(damage);
     }

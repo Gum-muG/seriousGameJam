@@ -19,9 +19,12 @@ public class enemy : MonoBehaviour
     [SerializeField] private MeshCollider collision;
     [SerializeField] private Transform canvas;
     [SerializeField] private EnemyHealth canvasScript;
+    [SerializeField] private int currencyReward = 5;
 
     [SerializeField] private float gravity = 10f;
     [SerializeField] private float bounceDecay = 5f;
+    [SerializeField] private int baseHealth = 10;
+    [SerializeField] private int healthPerLevel = 5;
 
     private Vector3 tiltVector;
     private Vector3 targetTilt;
@@ -33,7 +36,7 @@ public class enemy : MonoBehaviour
     private float spinY = 0;
     private float verticalVelocity = 0f;
 
-    private HealthComponent health = new HealthComponent(10, 10);
+    private HealthComponent health;
 
     private int wallLayer;
     private int enemyLayer;
@@ -47,6 +50,26 @@ public class enemy : MonoBehaviour
 
     private void Start()
     {
+        int level = 1;
+
+        GameManager gm = GameManager.instance;
+
+        if (gm == null)
+        {
+            gm = FindAnyObjectByType<GameManager>();
+        }
+
+        if (gm != null)
+        {
+            level = gm.currentLevel;
+        }
+
+        
+        int maxHealth = baseHealth + healthPerLevel * (level - 1);
+        health = new HealthComponent(maxHealth, maxHealth);
+
+        Debug.Log("Enemy spawned on level " + level + " with health " + health.Health);
+        levelRewardManager.instance.registerEnemy();
         findPlayer();
         findPlayerCamera();
 
@@ -208,12 +231,19 @@ public class enemy : MonoBehaviour
 
     private void Die()
     {
-        Destroy(gameObject);
+        playerCurrency currency = FindAnyObjectByType<playerCurrency>();
+
+        if (currency != null)
+        {
+            currency.addCoins(currencyReward);
+        }
 
         if (levelRewardManager.instance != null)
         {
-            levelRewardManager.instance.checkLevelCleared();
+            levelRewardManager.instance.enemyDied();
         }
+
+        Destroy(gameObject);
     }
 
     public void Damage(int damage)
