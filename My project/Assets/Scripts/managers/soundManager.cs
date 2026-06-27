@@ -8,10 +8,14 @@ public class soundManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == null)
+        if (instance != null)
         {
-            instance = this;
+            Destroy(gameObject);
+            return;
         }
+
+        instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     public void playSound(AudioClip audioClip, Transform spawn, float volume, bool loop)
@@ -28,6 +32,13 @@ public class soundManager : MonoBehaviour
 
         float clipLength = audioSource.clip.length;
 
-        if (!loop) Destroy(audioSource.gameObject, clipLength);
+        if (loop)
+        {
+            DontDestroyOnLoad(audioSource.gameObject);
+        }
+        else
+        {
+            Destroy(audioSource.gameObject, audioSource.clip.length);
+        }
     }
 }
