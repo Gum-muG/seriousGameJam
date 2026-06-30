@@ -30,9 +30,13 @@ public class soundManager : MonoBehaviour
 
         audioSource.Play();
 
-        float clipLength = audioSource.clip.length;
-
-        if (!loop) Destroy(audioSource.gameObject, clipLength);
-        else DontDestroyOnLoad(audioSource.gameObject);
+        if (loop)
+        {
+            DontDestroyOnLoad(audioSource.gameObject);
+        }
+        else
+        {
+            Destroy(audioSource.gameObject, audioSource.clip.length);
+        }
     }
 }
